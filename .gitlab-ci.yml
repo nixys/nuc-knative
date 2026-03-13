@@ -57,6 +57,7 @@ render_manifests:
       --namespace "$RELEASE_NAMESPACE"
       > "$RENDER_DIR/all.yaml"
     - test -s "$RENDER_DIR/all.yaml"
+    - сat "$RENDER_DIR/all.yaml"
   artifacts:
     when: always
     paths:
