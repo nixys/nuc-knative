@@ -71,6 +71,7 @@ kubeconform_validate:
     - job: render_manifests
       artifacts: true
   script:
+    - cat $RENDER_DIR/all.yaml
     - >
       /kubeconform
       -summary
