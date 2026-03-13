@@ -132,7 +132,7 @@ tests:
                 - X-Trace-Id
               exposeHeaders:
                 - X-Response-Time
-              maxAge: 24h
+              maxAge: 86400
               allowCredentials: true
       - equal:
           path: spec.rules[0].backendRefs[0]
