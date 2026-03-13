@@ -63,6 +63,8 @@ render_manifests:
       - .rendered/
 
 kubeconform_validate:
+  image:
+    name: copenpolicyagent/conftest:v0.66.0
   stage: validate
   needs:
     - job: render_manifests
