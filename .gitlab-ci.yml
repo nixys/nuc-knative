@@ -5,21 +5,7 @@ stages:
   - render
   - validate
 
-variables:
-  CHART_DIR: "."
-  RELEASE_NAME: "ci-release"
-  RELEASE_NAMESPACE: "default"
-  KUBE_VERSION: "1.30.0"
-  RENDER_DIR: ".rendered"
-  POLICY_DIR: "policy"
-  CONFTEST_REGO_VERSION: "v1"
-  GOBIN: "$CI_PROJECT_DIR/.bin"
-  GOMODCACHE: "$CI_PROJECT_DIR/.cache/go/pkg/mod"
-  GOCACHE: "$CI_PROJECT_DIR/.cache/go-build"
-  HELM_CACHE_HOME: "$CI_PROJECT_DIR/.helm/cache"
-  HELM_CONFIG_HOME: "$CI_PROJECT_DIR/.helm/config"
-  HELM_DATA_HOME: "$CI_PROJECT_DIR/.helm/data"
-  HELM_PLUGINS: "$CI_PROJECT_DIR/.helm/plugins"
+
 
 default:
   image:
