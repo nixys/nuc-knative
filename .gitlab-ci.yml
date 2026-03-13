@@ -78,3 +78,4 @@ kubeconform_validate:
       -output json
       -kubernetes-version "$KUBE_VERSION"
       "$RENDER_DIR/all.yaml"
+    - cat "$RENDER_DIR/all.yaml"
