@@ -63,11 +63,14 @@ render_manifests:
       - .rendered/
 
 kubeconform_validate:
-  image: copenpolicyagent/conftest:v0.65.0
+  image:
+    name: golang:1.24
   stage: validate
   needs:
     - job: render_manifests
       artifacts: true
+  before_script:
+    - go install github.com/open-policy-agent/conftest@v0.66.0
   script:
     - >
       kubeconform
