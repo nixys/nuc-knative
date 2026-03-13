@@ -13,14 +13,14 @@ tests:
 
   - it: renders both BackendTLSPolicy variants from the fixture
     values:
-      - tests/values/backendtlspolicy.values.yaml
+      - values/backendtlspolicy.values.yaml
     asserts:
       - hasDocuments:
           count: 2
 
   - it: renders BackendTLSPolicy fields for CA bundle validation
     values:
-      - tests/values/backendtlspolicy.values.yaml
+      - values/backendtlspolicy.values.yaml
     documentSelector:
       path: metadata.name
       value: backend-tls-with-ca
@@ -85,7 +85,7 @@ tests:
 
   - it: renders BackendTLSPolicy fields for well known CA validation
     values:
-      - tests/values/backendtlspolicy.values.yaml
+      - values/backendtlspolicy.values.yaml
     documentSelector:
       path: metadata.name
       value: backend-tls-with-wellknown

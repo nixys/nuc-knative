@@ -13,7 +13,7 @@ tests:
 
   - it: renders the HTTPRoute document from the fixture
     values:
-      - tests/values/httproute.values.yaml
+      - values/httproute.values.yaml
     asserts:
       - hasDocuments:
           count: 1

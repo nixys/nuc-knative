@@ -13,7 +13,7 @@ tests:
 
   - it: renders GatewayClass fields from the fixture
     values:
-      - tests/values/gatewayclass.values.yaml
+      - values/gatewayclass.values.yaml
     asserts:
       - hasDocuments:
           count: 1

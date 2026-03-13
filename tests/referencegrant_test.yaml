@@ -13,7 +13,7 @@ tests:
 
   - it: renders ReferenceGrant fields from the fixture
     values:
-      - tests/values/referencegrant.values.yaml
+      - values/referencegrant.values.yaml
     asserts:
       - hasDocuments:
           count: 1

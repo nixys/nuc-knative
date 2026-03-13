@@ -13,7 +13,7 @@ tests:
 
   - it: renders TLSRoute fields from the fixture
     values:
-      - tests/values/tlsroute.values.yaml
+      - values/tlsroute.values.yaml
     asserts:
       - hasDocuments:
           count: 1

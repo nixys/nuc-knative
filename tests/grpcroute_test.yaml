@@ -13,7 +13,7 @@ tests:
 
   - it: renders GRPCRoute fields from the fixture
     values:
-      - tests/values/grpcroute.values.yaml
+      - values/grpcroute.values.yaml
     asserts:
       - hasDocuments:
           count: 1

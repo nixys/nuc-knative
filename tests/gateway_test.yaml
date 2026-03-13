@@ -13,7 +13,7 @@ tests:
 
   - it: renders Gateway fields from the fixture
     values:
-      - tests/values/gateway.values.yaml
+      - values/gateway.values.yaml
     asserts:
       - hasDocuments:
           count: 1

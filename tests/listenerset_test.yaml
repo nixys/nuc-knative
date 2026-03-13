@@ -13,7 +13,7 @@ tests:
 
   - it: renders ListenerSet fields from the fixture
     values:
-      - tests/values/listenerset.values.yaml
+      - values/listenerset.values.yaml
     asserts:
       - hasDocuments:
           count: 1
