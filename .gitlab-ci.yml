@@ -66,10 +66,6 @@ kubeconform_validate:
   image:
     name: openpolicyagent/conftest:v0.66.0
   stage: validate
-
-  before_script:
-    - go install github.com/yannh/kubeconform/cmd/kubeconform@v0.7.0
-    - go install github.com/open-policy-agent/conftest@v0.66.0
   script:
     - >
       kubeconform
