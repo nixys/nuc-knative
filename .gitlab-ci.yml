@@ -1,31 +1,45 @@
 stages:
   - lint
-  - test
-  - policy
+  - unit-tests
+  - compatibility_tests
+  - render
+  - validate
 
-lint:
+variables:
+  CHART_DIR: "."
+  RELEASE_NAME: "ci-release"
+  RELEASE_NAMESPACE: "default"
+  KUBE_VERSION: "1.30.0"
+  RENDER_DIR: ".rendered"
+  POLICY_DIR: "policy"
+  CONFTEST_REGO_VERSION: "v1"
+  GOBIN: "$CI_PROJECT_DIR/.bin"
+  GOMODCACHE: "$CI_PROJECT_DIR/.cache/go/pkg/mod"
+  GOCACHE: "$CI_PROJECT_DIR/.cache/go-build"
+  HELM_CACHE_HOME: "$CI_PROJECT_DIR/.helm/cache"
+  HELM_CONFIG_HOME: "$CI_PROJECT_DIR/.helm/config"
+  HELM_DATA_HOME: "$CI_PROJECT_DIR/.helm/data"
+  HELM_PLUGINS: "$CI_PROJECT_DIR/.helm/plugins"
+
+default:
   image:
     name: alpine/helm:4
     entrypoint: ["/bin/sh", "-c"]
+
+lint:
   stage: lint
   script:
     - helm dependency update
     - helm lint .
 
 unit_tests:
-  image:
-    name: alpine/helm:4
-    entrypoint: ["/bin/sh", "-c"]
-  stage: test
+  stage: unit-tests
   script:
     - helm plugin install https://github.com/helm-unittest/helm-unittest.git --verify=false
     - helm unittest .
 
 compatibility_tests:
-  image:
-    name: alpine/helm:4
-    entrypoint: ["/bin/sh", "-c"]
-  stage: test
+  stage: compatibility_tests
   variables:
     GIT_DEPTH: "0"
   before_script:
@@ -34,14 +48,36 @@ compatibility_tests:
   script:
     - sh tests/backward_compatibility_test.sh
 
-datree_policy_check:
+render_manifests:
   image:
-    name: alpine/helm:4
-    entrypoint: ["/bin/sh", "-c"]
-  stage: policy
-  before_script:
-    - apk add --no-cache bash curl git unzip
-    - helm dependency update
-    - helm plugin install https://github.com/datreeio/helm-datree --verify=false
+    name: golang:1.24
+  stage: render
   script:
-    - helm datree test .
+    - helm dependency build "$CHART_DIR"
+    - mkdir -p "$RENDER_DIR"
+    - >
+      helm template
+      "$RELEASE_NAME"
+      "$CHART_DIR"
+      --namespace "$RELEASE_NAMESPACE"
+      > "$RENDER_DIR/all.yaml"
+    - test -s "$RENDER_DIR/all.yaml"
+  artifacts:
+    when: always
+    paths:
+      - .rendered/
+
+kubeconform_validate:
+  image:
+    name: golang:1.24
+  stage: validate
+  needs:
+    - job: render_manifests
+      artifacts: true
+  script:
+    - >
+      kubeconform
+      -strict
+      -summary
+      -kubernetes-version "$KUBE_VERSION"
+      "$RENDER_DIR/all.yaml"
