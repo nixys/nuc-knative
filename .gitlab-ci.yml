@@ -11,6 +11,7 @@ variables:
   RELEASE_NAMESPACE: "default"
   KUBE_VERSION: "1.30.0"
   RENDER_DIR: ".rendered"
+  KUBECONFORM_CRD_SCHEMA_LOCATION: "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
   POLICY_DIR: "policy"
   CONFTEST_REGO_VERSION: "v1"
   GOBIN: "$CI_PROJECT_DIR/.bin"
@@ -59,8 +60,6 @@ render_manifests:
       -f "$HELM_EXAMPLE_VALUES"
       > "$RENDER_DIR/all.yaml"
     - test -s "$RENDER_DIR/all.yaml"
-    - cat "$RENDER_DIR/all.yaml"
-    - cat $RENDER_DIR/all.yaml
   artifacts:
     when: always
     paths:
@@ -75,10 +74,13 @@ kubeconform_validate:
     - job: render_manifests
       artifacts: true
   script:
+    # Gateway API resources are CRDs, so kubeconform needs an extra schema registry.
     - >
       /kubeconform
       -summary
       -strict
       -output json
       -kubernetes-version "$KUBE_VERSION"
+      -schema-location default
+      -schema-location "$KUBECONFORM_CRD_SCHEMA_LOCATION"
       "$RENDER_DIR/all.yaml"
