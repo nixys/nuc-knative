@@ -11,14 +11,6 @@ if [ -z "$CURRENT_MAJOR" ] || [ -z "$CURRENT_MINOR" ] || [ -z "$CURRENT_PATCH" ]
   exit 1
 fi
 
-if [ "$CURRENT_MAJOR" -eq 0 ]; then
-  echo "ERROR: Cannot determine previous major for version $CHART_VERSION"
-  exit 1
-fi
-
-PREVIOUS_MAJOR=$((CURRENT_MAJOR - 1))
-PREVIOUS_MINOR=$((CURRENT_MINOR - 1))
-
 latest_stable_tag_for_major() {
   major="$1"
   git tag --list "v${major}.*" \
@@ -48,29 +40,6 @@ latest_previous_patch_tag() {
     | tail -n 1
 }
 
-PREV_MAJOR_TAG="$(latest_stable_tag_for_major "$PREVIOUS_MAJOR")"
-if [ -z "$PREV_MAJOR_TAG" ]; then
-  echo "ERROR: No stable tag found for previous major ${PREVIOUS_MAJOR}.x"
-  exit 1
-fi
-
-if [ "$PREVIOUS_MINOR" -lt 0 ]; then
-  echo "ERROR: No previous minor exists for current version $CHART_VERSION"
-  exit 1
-fi
-
-PREV_MINOR_TAG="$(latest_stable_tag_for_major_minor "$CURRENT_MAJOR" "$PREVIOUS_MINOR")"
-if [ -z "$PREV_MINOR_TAG" ]; then
-  echo "ERROR: No stable tag found for previous minor ${CURRENT_MAJOR}.${PREVIOUS_MINOR}.x"
-  exit 1
-fi
-
-PREV_PATCH_TAG="$(latest_previous_patch_tag "$CURRENT_MAJOR" "$CURRENT_MINOR" "$CURRENT_PATCH")"
-if [ -z "$PREV_PATCH_TAG" ]; then
-  echo "ERROR: No stable tag found for previous patch ${CURRENT_MAJOR}.${CURRENT_MINOR}.x below ${CHART_VERSION}"
-  exit 1
-fi
-
 TMP_DIR="$(mktemp -d)"
 cleanup() {
   rm -rf "$TMP_DIR"
@@ -88,8 +57,66 @@ run_compat_check() {
   helm template "compat-${tag}" . -f "$values_file" > /dev/null
 }
 
-run_compat_check "$PREV_MAJOR_TAG"
-run_compat_check "$PREV_MINOR_TAG"
-run_compat_check "$PREV_PATCH_TAG"
+PREV_MAJOR_TAG=""
+if [ "$CURRENT_MAJOR" -eq 0 ]; then
+  echo "Skipping previous major compatibility check for ${CHART_VERSION}: no previous major version exists"
+else
+  PREVIOUS_MAJOR=$((CURRENT_MAJOR - 1))
+  PREV_MAJOR_TAG="$(latest_stable_tag_for_major "$PREVIOUS_MAJOR")"
+  if [ -z "$PREV_MAJOR_TAG" ]; then
+    echo "Skipping previous major compatibility check: no stable tag found for previous major ${PREVIOUS_MAJOR}.x"
+  fi
+fi
 
-echo "Backward compatibility checks passed for: ${PREV_MAJOR_TAG}, ${PREV_MINOR_TAG}, ${PREV_PATCH_TAG}"
+PREV_MINOR_TAG=""
+if [ "$CURRENT_MINOR" -eq 0 ]; then
+  echo "Skipping previous minor compatibility check for ${CHART_VERSION}: no previous minor version exists"
+else
+  PREVIOUS_MINOR=$((CURRENT_MINOR - 1))
+  PREV_MINOR_TAG="$(latest_stable_tag_for_major_minor "$CURRENT_MAJOR" "$PREVIOUS_MINOR")"
+  if [ -z "$PREV_MINOR_TAG" ]; then
+    echo "Skipping previous minor compatibility check: no stable tag found for previous minor ${CURRENT_MAJOR}.${PREVIOUS_MINOR}.x"
+  fi
+fi
+
+PREV_PATCH_TAG=""
+if [ "$CURRENT_PATCH" -eq 0 ]; then
+  echo "Skipping previous patch compatibility check for ${CHART_VERSION}: no previous patch version exists"
+else
+  PREV_PATCH_TAG="$(latest_previous_patch_tag "$CURRENT_MAJOR" "$CURRENT_MINOR" "$CURRENT_PATCH")"
+  if [ -z "$PREV_PATCH_TAG" ]; then
+    echo "Skipping previous patch compatibility check: no stable tag found for previous patch ${CURRENT_MAJOR}.${CURRENT_MINOR}.x below ${CHART_VERSION}"
+  fi
+fi
+
+CHECKED_TAGS=""
+CHECK_COUNT=0
+
+run_compat_check_if_available() {
+  tag="$1"
+
+  if [ -z "$tag" ]; then
+    return
+  fi
+
+  run_compat_check "$tag"
+
+  if [ -n "$CHECKED_TAGS" ]; then
+    CHECKED_TAGS="${CHECKED_TAGS}, ${tag}"
+  else
+    CHECKED_TAGS="$tag"
+  fi
+
+  CHECK_COUNT=$((CHECK_COUNT + 1))
+}
+
+run_compat_check_if_available "$PREV_MAJOR_TAG"
+run_compat_check_if_available "$PREV_MINOR_TAG"
+run_compat_check_if_available "$PREV_PATCH_TAG"
+
+if [ "$CHECK_COUNT" -eq 0 ]; then
+  echo "No previous stable chart versions found for ${CHART_VERSION}; skipping backward compatibility checks"
+  exit 0
+fi
+
+echo "Backward compatibility checks passed for: ${CHECKED_TAGS}"
