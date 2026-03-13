@@ -47,47 +47,83 @@ compatibility_tests:
 
 render_manifests:
   stage: render
+  image: alpine/helm:3.14.0
+  variables:
+    CHART_DIR: "${CHART_DIR:-.}"
+    RENDER_DIR: "${RENDER_DIR:-.rendered}"
+    RELEASE_NAME: "${RELEASE_NAME:-nuc-release}"
+    RELEASE_NAMESPACE: "${RELEASE_NAMESPACE:-default}"
+    
   script:
+    # === 1. ОТЛАДКА ПЕРЕМЕННЫХ ===
     - echo "🔧 CHART_DIR=$CHART_DIR"
     - echo "🔧 RENDER_DIR=$RENDER_DIR"
     - echo "🔧 RELEASE_NAME=$RELEASE_NAME"
     - echo "🔧 RELEASE_NAMESPACE=$RELEASE_NAMESPACE"
+    - echo "🔧 Текущая директория: $(pwd)"
+    
+    # === 2. ПРОВЕРКА CHART ===
     - |
       if [ ! -f "$CHART_DIR/Chart.yaml" ]; then
-        echo "❌ ОШИБКА: $CHART_DIR/Chart.yaml не найден"
-        echo "📂 Содержимое текущей директории:"
+        echo "❌ ОШИБКА: Chart.yaml не найден"
         ls -la
         exit 1
       fi
-    - helm dependency build "$CHART_DIR"
+    - echo "✅ Chart.yaml найден"
+    - cat "$CHART_DIR/Chart.yaml"
+    
+    # === 3. ПРОВЕРКА TEMPLATE DIRECTORY ===
+    - echo "📂 templates/ директория:"
+    - ls -la "$CHART_DIR/templates/" 2>/dev/null || { echo "❌ templates/ не существует"; exit 1; }
+    - echo "📄 Файлы в templates/:"
+    - find "$CHART_DIR/templates/" -type f -name "*.yaml" -o -name "*.tpl" 2>/dev/null
+    
+    # === 4. HELM DEPENDENCY ===
+    - echo "📦 helm dependency build..."
+    - helm dependency build "$CHART_DIR" 2>&1
+    - ls -la "$CHART_DIR/charts/" 2>/dev/null || echo "⚠️ charts/ пуст или не существует"
+    
+    # === 5. HELM TEMPLATE С ВЫВОДОМ В КОНСОЛЬ ===
+    - echo "🔄 Запуск helm template (вывод в консоль для отладки):"
+    - helm template "$RELEASE_NAME" "$CHART_DIR" --namespace "$RELEASE_NAMESPACE" 2>&1 | tee /tmp/helm_output.txt
+    
+    # === 6. ЗАПИСЬ В ФАЙЛ ===
     - mkdir -p "$RENDER_DIR"
-    - >
-      helm template
-      "$RELEASE_NAME"
-      "$CHART_DIR"
-      --namespace "$RELEASE_NAMESPACE"
-      > "$RENDER_DIR/all.yaml"
-    - test -s "$RENDER_DIR/all.yaml"
-    - echo "✅ Сгенерировано $(grep -c '^kind:' .rendered/all.yaml) ресурсов"
-    - echo "🔍 Полное содержимое $RENDER_DIR/all.yaml:"
-    - cat "$RENDER_DIR/all.yaml"
+    - helm template "$RELEASE_NAME" "$CHART_DIR" --namespace "$RELEASE_NAMESPACE" > "$RENDER_DIR/all.yaml" 2>&1
     
-    # === ПОИСК kind: С УЧЁТОМ ОТСТУПОВ ===
-    - echo "🔎 Поиск 'kind:' с любыми отступами:"
-    - grep -c 'kind:' "$RENDER_DIR/all.yaml" || echo "Не найдено"
-    - grep 'kind:' "$RENDER_DIR/all.yaml" | head -10
+    # === 7. АНАЛИЗ ФАЙЛА ===
+    - echo "📊 Анализ $RENDER_DIR/all.yaml:"
+    - ls -la "$RENDER_DIR/all.yaml"
+    - FILE_SIZE=$(stat -c%s "$RENDER_DIR/all.yaml" 2>/dev/null || stat -f%z "$RENDER_DIR/all.yaml")
+    - echo "   Размер: $FILE_SIZE байт"
+    - echo "   Строки: $(wc -l < "$RENDER_DIR/all.yaml")"
     
-    # === ПОИСК apiVersion ===
-    - echo "🔎 Поиск 'apiVersion:':"
-    - grep -c 'apiVersion:' "$RENDER_DIR/all.yaml" || echo "Не найдено"
+    # === 8. ПОКАЗАТЬ СОДЕРЖИМОЕ ===
+    - echo "🔍 Содержимое файла (первые 100 строк):"
+    - head -100 "$RENDER_DIR/all.yaml"
     
-    # === ПРОВЕРКА НА ПУСТЫЕ ДОКУМЕНТЫ ===
-    - echo "🔎 Проверка на пустые YAML-документы:"
-    - grep -E '^---$|^[[:space:]]*$' "$RENDER_DIR/all.yaml" | head -10
+    # === 9. ПОИСК РЕСУРСОВ ===
+    - RESOURCE_COUNT=$(grep -cE '^[[:space:]]*kind:' "$RENDER_DIR/all.yaml" 2>/dev/null || echo 0)
+    - echo "✅ Найдено ресурсов: $RESOURCE_COUNT"
+    
+    # === 10. ЗАВЕРШИТЬ С ОШИБКОЙ ЕСЛИ ПУСТО ===
+    - |
+      if [ "$RESOURCE_COUNT" -eq 0 ]; then
+        echo "❌ ОШИБКА: Helm chart не сгенерировал ни одного ресурса"
+        echo "🔍 Возможные причины:"
+        echo "   1. Все шаблоны скрыты условиями {{ if .Values.xxx }}"
+        echo "   2. Отсутствуют обязательные values"
+        echo "   3. templates/ пуст или содержит только NOTES.txt"
+        echo "🔍 Проверьте conditions в шаблонах:"
+        grep -r "{{- if\|{{ if" "$CHART_DIR/templates/" 2>/dev/null | head -10
+        exit 1
+      fi
+    
   artifacts:
-    when: always
+    when: on_success  # Сохранять только при успехе
     paths:
-      - .rendered/
+      - "$RENDER_DIR/"
+    expire_in: 1 hour
 
 kubeconform_validate:
   image:
