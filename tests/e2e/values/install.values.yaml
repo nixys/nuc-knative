@@ -10,8 +10,8 @@ apiVersions:
   gateway: gateway.networking.k8s.io/v1
   grpcRoute: gateway.networking.k8s.io/v1
   httpRoute: gateway.networking.k8s.io/v1
-  referenceGrant: gateway.networking.k8s.io/v1
-  tlsRoute: gateway.networking.k8s.io/v1
+  referenceGrant: gateway.networking.k8s.io/v1beta1
+  tlsRoute: gateway.networking.k8s.io/v1alpha2
 
 backendTLSPolicies:
   - name: e2e-backend-tls
