@@ -21,7 +21,7 @@ SCENARIO_CHOICES = [
 def build_parser() -> argparse.ArgumentParser:
     repo_root = Path(__file__).resolve().parents[3]
     parser = argparse.ArgumentParser(
-        description="Run Altinity-style smoke tests for the nuc-native-gateway chart."
+        description="Run nxs-universal-chart-style smoke tests for the nuc-native-gateway chart."
     )
     parser.add_argument(
         "--chart-dir",
@@ -79,4 +79,3 @@ def build_parser() -> argparse.ArgumentParser:
         help="Keep the staged work directory after the run.",
     )
     return parser
-

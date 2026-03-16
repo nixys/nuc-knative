@@ -224,4 +224,4 @@ sh tests/units/backward_compatibility_test.sh
 | [templates/_helpers.tpl](/home/ruk/nixys/nuc-native-gateway/templates/_helpers.tpl) | Shared helper for labels, annotations, namespace handling, and raw spec/status rendering. |
 | [templates/](/home/ruk/nixys/nuc-native-gateway/templates) | One template per supported Gateway API kind. |
 | [tests/units/](/home/ruk/nixys/nuc-native-gateway/tests/units) | Compact Helm unit suites, fixture values, and backward compatibility script. |
-| [tests/smokes/](/home/ruk/nixys/nuc-native-gateway/tests/smokes) | Altinity-style smoke tests for render and schema flows. |
+| [tests/smokes/](/home/ruk/nixys/nuc-native-gateway/tests/smokes) | `nxs-universal-chart`-style smoke tests for render and schema flows. |

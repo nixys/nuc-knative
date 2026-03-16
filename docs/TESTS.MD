@@ -3,7 +3,7 @@
 This chart uses two complementary automated test layers:
 
 - `tests/units/` for fast `helm-unittest` suites and backward-compatibility checks
-- `tests/smokes/` for Altinity-style smoke scenarios that exercise full render flows
+- `tests/smokes/` for `nxs-universal-chart`-style smoke scenarios that exercise full render flows
 
 ## Unit Tests
 
@@ -67,9 +67,9 @@ Notes:
 
 ## Smoke Tests
 
-This chart includes Altinity-style smoke tests under `tests/smokes/`.
+This chart includes `nxs-universal-chart`-style smoke tests under `tests/smokes/`.
 
-The structure follows the same layered idea as [Altinity helm-charts tests](https://github.com/Altinity/helm-charts/tree/main/tests):
+The structure follows the same layered idea as `nxs-universal-chart` tests:
 
 - `run/` contains the entry point
 - `scenarios/` orchestrates complete smoke flows
