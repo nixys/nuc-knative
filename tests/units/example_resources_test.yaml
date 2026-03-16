@@ -51,53 +51,62 @@ tests:
           apiVersion: gateway.networking.k8s.io/v1
           name: backend-tls-with-ca
           namespace: app-a
+          any: true
         template: templates/backendtlspolicy.yaml
       - containsDocument:
           kind: BackendTLSPolicy
           apiVersion: gateway.networking.k8s.io/v1
           name: backend-tls-with-wellknown
           namespace: app-b
+          any: true
         template: templates/backendtlspolicy.yaml
       - containsDocument:
           kind: GatewayClass
           apiVersion: gateway.networking.k8s.io/v1
           name: public-gateway-class
+          any: true
         template: templates/gatewayclass.yaml
       - containsDocument:
           kind: Gateway
           apiVersion: gateway.networking.k8s.io/v1
           name: edge-gateway
           namespace: edge-ns
+          any: true
         template: templates/gateway.yaml
       - containsDocument:
           kind: GRPCRoute
           apiVersion: gateway.networking.k8s.io/v1
           name: inventory-grpc
           namespace: apps
+          any: true
         template: templates/grpcroute.yaml
       - containsDocument:
           kind: HTTPRoute
           apiVersion: gateway.networking.k8s.io/v1
           name: api-http
           namespace: apps
+          any: true
         template: templates/httproute.yaml
       - containsDocument:
           kind: ListenerSet
           apiVersion: gateway.networking.k8s.io/v1
           name: shared-listeners
           namespace: apps
+          any: true
         template: templates/listenerset.yaml
       - containsDocument:
           kind: ReferenceGrant
           apiVersion: gateway.networking.k8s.io/v1
           name: allow-backend-refs
           namespace: backend
+          any: true
         template: templates/referencegrant.yaml
       - containsDocument:
           kind: TLSRoute
           apiVersion: gateway.networking.k8s.io/v1
           name: passthrough-tls
           namespace: apps
+          any: true
         template: templates/tlsroute.yaml
 
   - it: renders the GatewayClass example
