@@ -33,7 +33,7 @@ lint:
 unit_tests:
   stage: unit-tests
   script:
-    - helm plugin install https://github.com/helm-unittest/helm-unittest.git
+    - helm plugin install https://github.com/helm-unittest/helm-unittest.git --verify=false
     - helm unittest -f 'tests/units/*_test.yaml' .
 
 compatibility_tests:
