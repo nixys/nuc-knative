@@ -82,7 +82,7 @@ Use [values.yaml.example](values.yaml.example) as a starting point and remove th
 The repository uses three test layers:
 
 - `tests/units/` for `helm-unittest` suites and backward compatibility checks
-- `tests/e2e/` for kind-based `ct install` checks against real Gateway API CRDs
+- `tests/e2e/` for local kind-based `ct install` checks against real Gateway API CRDs
 - `tests/smokes/` for render and schema smoke scenarios
 
 Representative local commands:
@@ -97,6 +97,8 @@ make test-e2e
 ```
 
 Detailed test documentation is available in [docs/TESTS.MD](docs/TESTS.MD).
+
+The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run locally through [Makefile](Makefile) or directly via `tests/e2e/test-e2e.sh`.
 
 ## Notes
 

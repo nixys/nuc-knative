@@ -6,7 +6,7 @@ This chart uses three complementary automated test layers:
 - `tests/e2e/` for kind-based chart installation against real Gateway API CRDs
 - `tests/smokes/` for smoke scenarios that exercise full render flows
 
-CI now runs linting, unit tests, smoke tests, backward compatibility rendering, full example rendering, `kubeconform`, and a dedicated kind-based e2e job. The e2e layer still has heavier infrastructure requirements than the other checks because it needs Docker, kind, and network access.
+GitLab CI runs linting, unit tests, smoke tests, backward compatibility rendering, full example rendering, and `kubeconform`. The e2e layer is kept local because it has heavier infrastructure requirements and depends on Docker, kind, and outbound network access.
 
 ## Unit Tests
 
@@ -129,7 +129,6 @@ make test-e2e E2E_ARGS="--debug"
 - `kubectl`
 - outbound access to pull `quay.io/helmpack/chart-testing`
 - outbound access to fetch the Gateway API CRD bundle
-- for GitLab CI, a runner that supports `docker:dind` and privileged containers
 
 Optional environment overrides:
 
