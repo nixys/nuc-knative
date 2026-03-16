@@ -1,4 +1,71 @@
-# Smoke Tests
+# Tests
+
+This chart uses two complementary automated test layers:
+
+- `tests/units/` for fast `helm-unittest` suites and backward-compatibility checks
+- `tests/smokes/` for Altinity-style smoke scenarios that exercise full render flows
+
+## Unit Tests
+
+Unit tests live under `tests/units/`.
+
+They are intentionally compact and focus on chart-owned behavior rather than repeating full Gateway API payloads field by field.
+
+## Unit Test Layout
+
+```text
+tests/units/
+├── backward_compatibility_test.sh
+├── example_resources_test.yaml
+├── rendering_contract_test.yaml
+└── values/
+    └── rendering_contract.values.yaml
+```
+
+## Covered Unit Checks
+
+The unit layer currently covers:
+
+1. `rendering_contract_test.yaml`
+   Verifies the generic rendering helper behavior used by all resource templates:
+   - `nameOverride`
+   - merged labels and annotations
+   - namespace fallback for namespaced resources
+   - omitted namespace for cluster-scoped `GatewayClass`
+   - global and per-resource `apiVersion` overrides
+
+2. `example_resources_test.yaml`
+   Uses `values.yaml.example` as a representative fixture and checks that:
+   - all expected documents are rendered
+   - each supported kind has a stable smoke-level assertion
+   - the example stays aligned with the chart contract
+
+3. `backward_compatibility_test.sh`
+   Renders the current chart with `values.yaml` from previous stable git tags and verifies that:
+   - old values files still pass `helm lint`
+   - old values files still render with `helm template`
+   - missing previous major, minor, or patch tags are treated as skip conditions rather than hard failures
+
+## Running Unit Tests
+
+Run all Helm unit suites:
+
+```bash
+helm unittest -f 'tests/units/*_test.yaml' .
+```
+
+Run the backward-compatibility script:
+
+```bash
+sh tests/units/backward_compatibility_test.sh
+```
+
+Notes:
+
+- value file paths inside the unit suites are resolved relative to `tests/units/`
+- the backward-compatibility script requires git tags to be available locally
+
+## Smoke Tests
 
 This chart includes Altinity-style smoke tests under `tests/smokes/`.
 
