@@ -13,16 +13,97 @@ release:
   namespace: unit-namespace
 
 tests:
-  - it: renders the full example set
+  - it: renders the expected document count per template
     values:
       - ../../values.yaml.example
     asserts:
       - hasDocuments:
-          count: 9
+          count: 2
+        template: templates/backendtlspolicy.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/gatewayclass.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/gateway.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/grpcroute.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/httproute.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/listenerset.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/referencegrant.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/tlsroute.yaml
+
+  - it: renders the expected example manifests
+    values:
+      - ../../values.yaml.example
+    asserts:
+      - containsDocument:
+          kind: BackendTLSPolicy
+          apiVersion: gateway.networking.k8s.io/v1
+          name: backend-tls-with-ca
+          namespace: app-a
+        template: templates/backendtlspolicy.yaml
+      - containsDocument:
+          kind: BackendTLSPolicy
+          apiVersion: gateway.networking.k8s.io/v1
+          name: backend-tls-with-wellknown
+          namespace: app-b
+        template: templates/backendtlspolicy.yaml
+      - containsDocument:
+          kind: GatewayClass
+          apiVersion: gateway.networking.k8s.io/v1
+          name: public-gateway-class
+        template: templates/gatewayclass.yaml
+      - containsDocument:
+          kind: Gateway
+          apiVersion: gateway.networking.k8s.io/v1
+          name: edge-gateway
+          namespace: edge-ns
+        template: templates/gateway.yaml
+      - containsDocument:
+          kind: GRPCRoute
+          apiVersion: gateway.networking.k8s.io/v1
+          name: inventory-grpc
+          namespace: apps
+        template: templates/grpcroute.yaml
+      - containsDocument:
+          kind: HTTPRoute
+          apiVersion: gateway.networking.k8s.io/v1
+          name: api-http
+          namespace: apps
+        template: templates/httproute.yaml
+      - containsDocument:
+          kind: ListenerSet
+          apiVersion: gateway.networking.k8s.io/v1
+          name: shared-listeners
+          namespace: apps
+        template: templates/listenerset.yaml
+      - containsDocument:
+          kind: ReferenceGrant
+          apiVersion: gateway.networking.k8s.io/v1
+          name: allow-backend-refs
+          namespace: backend
+        template: templates/referencegrant.yaml
+      - containsDocument:
+          kind: TLSRoute
+          apiVersion: gateway.networking.k8s.io/v1
+          name: passthrough-tls
+          namespace: apps
+        template: templates/tlsroute.yaml
 
   - it: renders the GatewayClass example
     values:
       - ../../values.yaml.example
+    template: templates/gatewayclass.yaml
     documentSelector:
       path: metadata.name
       value: public-gateway-class
@@ -38,6 +119,7 @@ tests:
   - it: renders the Gateway example
     values:
       - ../../values.yaml.example
+    template: templates/gateway.yaml
     documentSelector:
       path: metadata.name
       value: edge-gateway
@@ -54,6 +136,7 @@ tests:
   - it: renders the BackendTLSPolicy CA bundle example
     values:
       - ../../values.yaml.example
+    template: templates/backendtlspolicy.yaml
     documentSelector:
       path: metadata.name
       value: backend-tls-with-ca
@@ -67,6 +150,7 @@ tests:
   - it: renders the BackendTLSPolicy well-known CA example
     values:
       - ../../values.yaml.example
+    template: templates/backendtlspolicy.yaml
     documentSelector:
       path: metadata.name
       value: backend-tls-with-wellknown
@@ -80,6 +164,7 @@ tests:
   - it: renders the GRPCRoute example
     values:
       - ../../values.yaml.example
+    template: templates/grpcroute.yaml
     documentSelector:
       path: metadata.name
       value: inventory-grpc
@@ -93,6 +178,7 @@ tests:
   - it: renders the HTTPRoute example
     values:
       - ../../values.yaml.example
+    template: templates/httproute.yaml
     documentSelector:
       path: metadata.name
       value: api-http
@@ -106,6 +192,7 @@ tests:
   - it: renders the ListenerSet example
     values:
       - ../../values.yaml.example
+    template: templates/listenerset.yaml
     documentSelector:
       path: metadata.name
       value: shared-listeners
@@ -119,6 +206,7 @@ tests:
   - it: renders the ReferenceGrant example
     values:
       - ../../values.yaml.example
+    template: templates/referencegrant.yaml
     documentSelector:
       path: metadata.name
       value: allow-backend-refs
@@ -132,6 +220,7 @@ tests:
   - it: renders the TLSRoute example
     values:
       - ../../values.yaml.example
+    template: templates/tlsroute.yaml
     documentSelector:
       path: metadata.name
       value: passthrough-tls

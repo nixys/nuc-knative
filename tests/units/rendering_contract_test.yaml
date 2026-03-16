@@ -7,7 +7,14 @@ release:
   namespace: unit-namespace
 
 tests:
-  - it: renders no documents by default
+  - it: renders no Gateway documents by default
+    template: templates/gateway.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders no GatewayClass documents by default
+    template: templates/gatewayclass.yaml
     asserts:
       - hasDocuments:
           count: 0
@@ -15,6 +22,7 @@ tests:
   - it: applies helper defaults and overrides for namespaced resources
     values:
       - values/rendering_contract.values.yaml
+    template: templates/gateway.yaml
     documentSelector:
       path: metadata.name
       value: merged-gateway
@@ -52,6 +60,7 @@ tests:
   - it: renders cluster-scoped resources without namespace and with configured apiVersion
     values:
       - values/rendering_contract.values.yaml
+    template: templates/gatewayclass.yaml
     documentSelector:
       path: metadata.name
       value: public-gateway-class
