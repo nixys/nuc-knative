@@ -135,6 +135,5 @@ e2e_tests:
       esac &&
       curl -fsSL -o /usr/local/bin/kind "https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-linux-${ARCH}" &&
       chmod +x /usr/local/bin/kind
-    - until docker info >/dev/null 2>&1; do sleep 1; done
   script:
     - K8S_VERSION="v${KUBE_VERSION}" bash tests/e2e/test-e2e.sh --debug
