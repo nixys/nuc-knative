@@ -129,6 +129,7 @@ make test-e2e E2E_ARGS="--debug"
 - `kubectl`
 - outbound access to pull `quay.io/helmpack/chart-testing`
 - outbound access to fetch the Gateway API CRD bundle
+- for GitLab CI, a runner that supports `docker:dind` and privileged containers
 
 Optional environment overrides:
 

@@ -119,7 +119,10 @@ e2e_tests:
     entrypoint: [""]
   services:
     - name: docker:27.5.1-dind
+      alias: docker
       command: ["--tls=false"]
+      variables:
+        HEALTHCHECK_TCP_PORT: "2375"
   variables:
     DOCKER_HOST: "tcp://docker:2375"
     DOCKER_TLS_CERTDIR: ""
@@ -135,5 +138,6 @@ e2e_tests:
       esac &&
       curl -fsSL -o /usr/local/bin/kind "https://kind.sigs.k8s.io/dl/${KIND_VERSION}/kind-linux-${ARCH}" &&
       chmod +x /usr/local/bin/kind
+    - until docker info >/dev/null 2>&1; do sleep 1; done
   script:
     - K8S_VERSION="v${KUBE_VERSION}" bash tests/e2e/test-e2e.sh --debug
