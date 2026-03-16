@@ -1,9 +1,12 @@
 # Tests
 
-This chart uses two complementary automated test layers:
+This chart uses three complementary automated test layers:
 
 - `tests/units/` for fast `helm-unittest` suites and backward-compatibility checks
-- `tests/smokes/` for `nxs-universal-chart`-style smoke scenarios that exercise full render flows
+- `tests/e2e/` for kind-based chart installation against real Gateway API CRDs
+- `tests/smokes/` for smoke scenarios that exercise full render flows
+
+CI now runs linting, unit tests, smoke tests, backward compatibility rendering, full example rendering, `kubeconform`, and a dedicated kind-based e2e job. The e2e layer still has heavier infrastructure requirements than the other checks because it needs Docker, kind, and network access.
 
 ## Unit Tests
 
@@ -65,11 +68,86 @@ Notes:
 - value file paths inside the unit suites are resolved relative to `tests/units/`
 - the backward-compatibility script requires git tags to be available locally
 
+## E2E Tests
+
+End-to-end tests live under `tests/e2e/`.
+
+This layer uses a shell runner around `kind` and `chart-testing` to validate that the chart can be installed into a real cluster with Gateway API CRDs present.
+
+## E2E Layout
+
+```text
+tests/e2e/
+├── kind.yaml
+├── test-e2e.sh
+└── values/
+    └── install.values.yaml
+```
+
+## What the E2E Runner Does
+
+`tests/e2e/test-e2e.sh` performs the following steps:
+
+1. Starts a disposable kind cluster from `tests/e2e/kind.yaml`.
+2. Installs Gateway API experimental CRDs from a pinned upstream release.
+3. Runs `ct install` against the chart root with `tests/e2e/values/install.values.yaml`.
+4. Verifies the installed `GatewayClass`, `Gateway`, `HTTPRoute`, `GRPCRoute`, `TLSRoute`, `BackendTLSPolicy`, and `ReferenceGrant` objects with `kubectl get`.
+5. Cleans up the chart-testing container and the kind cluster on exit.
+
+## Running E2E Tests
+
+Run the default end-to-end flow:
+
+```bash
+bash tests/e2e/test-e2e.sh
+```
+
+Pass additional arguments through to `ct install`:
+
+```bash
+bash tests/e2e/test-e2e.sh --debug
+```
+
+The repository also includes a local convenience [Makefile](../Makefile) for these flows:
+
+```bash
+make test-e2e
+make test-e2e-debug
+make test-e2e-help
+```
+
+To pass extra arguments to the shell runner through `make`, use `E2E_ARGS`:
+
+```bash
+make test-e2e E2E_ARGS="--debug"
+```
+
+## E2E Prerequisites
+
+- `docker`
+- `kind`
+- `kubectl`
+- outbound access to pull `quay.io/helmpack/chart-testing`
+- outbound access to fetch the Gateway API CRD bundle
+
+Optional environment overrides:
+
+- `CLUSTER_NAME`
+- `CT_VERSION`
+- `K8S_VERSION`
+- `GATEWAY_API_VERSION`
+
+## E2E Notes
+
+- The e2e values file intentionally does not include `ListenerSet`.
+  Upstream Gateway API experimental bundles install `XListenerSet` CRDs, while this chart currently renders `ListenerSet`.
+- Namespaced resources in `tests/e2e/values/install.values.yaml` rely on the fixed e2e namespace `nuc-native-gateway-e2e` used by the runner.
+
 ## Smoke Tests
 
-This chart includes `nxs-universal-chart`-style smoke tests under `tests/smokes/`.
+This chart includes smoke tests under `tests/smokes/`.
 
-The structure follows the same layered idea as `nxs-universal-chart` tests:
+The structure is intentionally split into small reusable layers:
 
 - `run/` contains the entry point
 - `scenarios/` orchestrates complete smoke flows
@@ -155,6 +233,13 @@ From the repository root:
 
 ```bash
 python3 tests/smokes/run/smoke.py
+```
+
+Equivalent `Makefile` targets:
+
+```bash
+make test-smoke
+make test-smoke-fast
 ```
 
 ## Running Individual Scenarios

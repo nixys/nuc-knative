@@ -1,93 +1,119 @@
 # NUC Native Gateway
 
+Helm chart for rendering Kubernetes Gateway API resources from declarative values.
 
+The chart does not install Gateway API CRDs or any controller. It only renders Gateway API objects that are already supported by the target cluster and controller.
 
-## Getting started
+## Quick Start
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Render the example configuration:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.nixys.ru/apps/nuc-subcharts/nuc-native-gateway.git
-git branch -M main
-git push -uf origin main
+```bash
+helm template nuc-native-gateway . -f values.yaml.example
 ```
 
-## Integrate with your tools
+Install the chart:
 
-- [ ] [Set up project integrations](https://git.nixys.ru/apps/nuc-subcharts/nuc-native-gateway/-/settings/integrations)
+```bash
+helm install nuc-native-gateway . \
+  --namespace gateway-system \
+  --create-namespace \
+  -f values.yaml.example
+```
 
-## Collaborate with your team
+## Supported Resources
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+The chart can render these Gateway API kinds:
 
-## Test and Deploy
+- `BackendTLSPolicy`
+- `GatewayClass`
+- `Gateway`
+- `GRPCRoute`
+- `HTTPRoute`
+- `ListenerSet`
+- `ReferenceGrant`
+- `TLSRoute`
 
-Use the built-in continuous integration in GitLab.
+Support for individual kinds and fields still depends on the Gateway API bundle and controller installed in the cluster.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Values Model
 
-***
+Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
 
-# Editing this README
+- `backendTLSPolicies`
+- `gatewayClasses`
+- `gateways`
+- `grpcRoutes`
+- `httpRoutes`
+- `listenerSets`
+- `referenceGrants`
+- `tlsRoutes`
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Every list item uses the same generic contract:
 
-## Suggestions for a good README
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | yes | Resource name. |
+| `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped resources. |
+| `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
+| `annotations` | no | Annotations merged on top of `commonAnnotations`. |
+| `apiVersion` | no | Per-resource API version override. |
+| `spec` | no | Raw resource spec rendered as-is. |
+| `status` | no | Optional raw status block. Usually not managed through Helm in production. |
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Global controls:
 
-## Name
-Choose a self-explaining name for your project.
+- `nameOverride`
+- `commonLabels`
+- `commonAnnotations`
+- `apiVersions.*`
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+The value contract is validated by [values.schema.json](values.schema.json).
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Included Values Files
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+- [values.yaml](values.yaml): minimal defaults that render no resources.
+- [values.yaml.example](values.yaml.example): complete example covering every supported resource type.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Use [values.yaml.example](values.yaml.example) as a starting point and remove the sections you do not need.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Testing
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+The repository uses three test layers:
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- `tests/units/` for `helm-unittest` suites and backward compatibility checks
+- `tests/e2e/` for kind-based `ct install` checks against real Gateway API CRDs
+- `tests/smokes/` for render and schema smoke scenarios
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Representative local commands:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+helm lint . -f values.yaml.example
+helm template nuc-native-gateway . -f values.yaml.example
+helm unittest -f 'tests/units/*_test.yaml' .
+sh tests/units/backward_compatibility_test.sh
+python3 tests/smokes/run/smoke.py --scenario example-render
+make test-e2e
+```
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Detailed test documentation is available in [docs/TESTS.MD](docs/TESTS.MD).
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+## Notes
 
-## License
-For open source projects, say how it is licensed.
+- Keep the chart API versions aligned with the Gateway API CRDs installed in the cluster.
+- `ListenerSet` support is controller-dependent and may rely on experimental APIs.
+- Prefer managing `spec` through Helm and let the controller own `status`.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+## Repository Layout
+
+| Path | Purpose |
+|------|---------|
+| [Chart.yaml](Chart.yaml) | Chart metadata. |
+| [values.yaml](values.yaml) | Minimal default values. |
+| [values.yaml.example](values.yaml.example) | Full example configuration. |
+| [values.schema.json](values.schema.json) | JSON schema for chart values. |
+| [templates/](templates) | One template per supported Gateway API kind plus shared helpers. |
+| [tests/units/](tests/units) | Compact Helm unit suites and backward compatibility checks. |
+| [tests/e2e/](tests/e2e) | kind-based end-to-end installation checks. |
+| [tests/smokes/](tests/smokes) | Smoke scenarios for render and schema validation. |
+| [docs/TESTS.MD](docs/TESTS.MD) | Detailed testing documentation. |
