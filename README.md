@@ -23,18 +23,20 @@ helm install nuc-knative . \
 
 ## Supported Resources
 
-- `Certificate`
-- `ClusterDomainClaim`
-- `Configuration`
-- `DomainMapping`
-- `Image`
-- `Ingress`
-- `Metric`
-- `PodAutoscaler`
-- `Revision`
-- `Route`
-- `ServerlessService`
-- `Service`
+| Kind | Values key | Scope | Default apiVersion |
+|------|------------|-------|--------------------|
+| `Certificate` | `certificates` | Namespaced | `networking.internal.knative.dev/v1alpha1` |
+| `ClusterDomainClaim` | `clusterDomainClaims` | Cluster | `networking.internal.knative.dev/v1alpha1` |
+| `Configuration` | `configurations` | Namespaced | `serving.knative.dev/v1` |
+| `DomainMapping` | `domainMappings` | Namespaced | `serving.knative.dev/v1beta1` |
+| `Image` | `images` | Namespaced | `caching.internal.knative.dev/v1alpha1` |
+| `Ingress` | `ingresses` | Namespaced | `networking.internal.knative.dev/v1alpha1` |
+| `Metric` | `metrics` | Namespaced | `autoscaling.internal.knative.dev/v1alpha1` |
+| `PodAutoscaler` | `podAutoscalers` | Namespaced | `autoscaling.internal.knative.dev/v1alpha1` |
+| `Revision` | `revisions` | Namespaced | `serving.knative.dev/v1` |
+| `Route` | `routes` | Namespaced | `serving.knative.dev/v1` |
+| `ServerlessService` | `serverlessServices` | Namespaced | `networking.internal.knative.dev/v1alpha1` |
+| `Service` | `services` | Namespaced | `serving.knative.dev/v1` |
 
 ## Values Model
 
@@ -57,7 +59,7 @@ Each list item uses the same contract:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `name` | yes | Resource name.  |
+| `name` | yes | Resource name. |
 | `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped resources. |
 | `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
 | `annotations` | no | Annotations merged on top of `commonAnnotations`. |
