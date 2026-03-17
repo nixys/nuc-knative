@@ -1,20 +1,29 @@
-# Override the default chart label name if needed.
+# -- Override the default chart label name if needed.
 nameOverride: ""
 
-# Extra labels/annotations applied to every rendered resource.
+# -- Extra labels applied to every rendered resource.
 commonLabels: {}
+# -- Extra annotations applied to every rendered resource.
 commonAnnotations: {}
 
 # The defaults below are aligned with the current Gateway API standard channel.
 # Override them if your cluster uses another bundle version.
 apiVersions:
+  # -- Default apiVersion for BackendTLSPolicy resources.
   backendTLSPolicy: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for GatewayClass resources.
   gatewayClass: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for Gateway resources.
   gateway: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for GRPCRoute resources.
   grpcRoute: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for HTTPRoute resources.
   httpRoute: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for ListenerSet resources.
   listenerSet: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for ReferenceGrant resources.
   referenceGrant: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for TLSRoute resources.
   tlsRoute: gateway.networking.k8s.io/v1
 
 # Each list item supports:
@@ -24,19 +33,28 @@ apiVersions:
 # - annotations: optional
 # - apiVersion: optional override for a single resource
 # - spec: arbitrary resource spec
+# - status: optional raw status block for fixtures and synthetic manifests
 
+# -- BackendTLSPolicy resources to render.
 backendTLSPolicies: []
 
+# -- GatewayClass resources to render.
 gatewayClasses: []
 
+# -- Gateway resources to render.
 gateways: []
 
+# -- GRPCRoute resources to render.
 grpcRoutes: []
 
+# -- HTTPRoute resources to render.
 httpRoutes: []
 
+# -- ListenerSet resources to render.
 listenerSets: []
 
+# -- ReferenceGrant resources to render.
 referenceGrants: []
 
+# -- TLSRoute resources to render.
 tlsRoutes: []

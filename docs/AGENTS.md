@@ -39,6 +39,7 @@ Do not introduce parallel structures that solve the same problem twice. Avoid du
 ## Documentation Rules
 
 - Keep one root `README.md` as the primary entry point.
+- Keep `README.md` generated from `README.md.gotmpl` via `helm-docs` and `pre-commit`.
 - Keep test-layer details in `docs/TESTS.MD`.
 - Keep repository-wide contribution and maintenance guidance in `docs/AGENTS.md`.
 - Use relative repository links in Markdown, not workstation-specific absolute paths.
@@ -46,6 +47,7 @@ Do not introduce parallel structures that solve the same problem twice. Avoid du
 - If a workflow is local-only, state that explicitly.
 - Document operational constraints, not just happy paths. If CI cannot run Docker, say so. If a resource kind depends on experimental APIs, say so.
 - When changing versions, commands, or supported resources, update docs in the same change as code and CI.
+- When changing chart values, update the `# --` comments in `values.yaml` so the generated Helm values table stays useful.
 
 ## Chart Design Expectations
 
@@ -152,6 +154,8 @@ If the repository ships a `Makefile`, use it as a thin local wrapper around exis
 
 Good targets:
 
+- `make hooks-install`
+- `make docs`
 - `make lint`
 - `make test-unit`
 - `make test-compat`

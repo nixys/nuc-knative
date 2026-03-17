@@ -31,37 +31,53 @@ See `git help commit`:
 1. Remember to sign off your commits as described above
 1. Submit a pull request
 
-***NOTE***: In order to make testing and merging of PRs easier, please submit changes to multiple charts in separate PRs.
+Keep each pull request scoped to one logical chart change so the rendered manifests, tests, and docs can be reviewed together.
 
 ### Technical Requirements
 
 * Must pass [DCO check](#sign-off-your-work)
 * Must follow [Charts best practices](https://helm.sh/docs/topics/chart_best_practices/)
-* Must pass CI jobs for linting and installing changed charts with the [chart-testing](https://github.com/helm/chart-testing) tool
-* Any change to a chart requires a version bump following [semver](https://semver.org/) principles. See [Immutability](#immutability) and [Versioning](#versioning) below
+* Must pass the repository CI checks for linting, unit tests, smoke tests, render checks, and schema validation
+* Must update generated documentation when the values contract changes
+* Any change to a chart should follow the repository versioning policy described below
 
-Once changes have been merged, the release job will automatically run to package and release changed charts.
+When values or chart metadata change, refresh the README through the `helm-docs` hook before submitting the pull request.
 
 ### Immutability
 
-Chart releases must be immutable. Any change to a chart warrants a chart version bump even if it is only changed to the documentation.
+Chart releases must be immutable. Any published chart change that affects templates, defaults, schema, or public documentation should be versioned deliberately.
 
 ### Versioning
 
-The chart `version` should follow [semver](https://semver.org/).
-
-Charts should start at `1.0.0`. Any breaking (backwards incompatible) changes to a chart should:
+The chart `version` should follow [semver](https://semver.org/). Any breaking (backwards incompatible) change to the values contract or rendered manifests should:
 
 1. Bump the MAJOR version
 2. In the README, under a section called "Upgrading", describe the manual steps necessary to upgrade to the new (specified) MAJOR version
 
 ### Generate README
 
-The readme of each chart can be re-generated with the following command (run inside the chart directory):
+The chart README is generated from [README.md.gotmpl](../README.md.gotmpl) and [values.yaml](../values.yaml) with [`norwoodj/helm-docs`](https://github.com/norwoodj/helm-docs).
+
+Install the local git hook once:
 
 ```shell
-docker run --rm --volume "$(pwd):/helm-docs" -u "$(id -u)" jnorwood/helm-docs:v1.8.1
+pre-commit install
+pre-commit install-hooks
 ```
+
+Regenerate the README on demand:
+
+```shell
+pre-commit run helm-docs --all-files
+```
+
+Or use the local wrapper:
+
+```shell
+make docs
+```
+
+The hook uses `norwoodj/helm-docs` through `scripts/helm-docs.sh`: it prefers a local `helm-docs` binary and falls back to the official Docker image `jnorwood/helm-docs:v1.14.2`.
 
 ### Community Requirements
 

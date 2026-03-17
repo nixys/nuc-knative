@@ -13,6 +13,15 @@ help: ## Show available local targets
 lint: ## Run helm lint with the example values file
 	helm lint . -f values.yaml.example
 
+.PHONY: hooks-install
+hooks-install: ## Install local pre-commit hooks
+	pre-commit install
+	pre-commit install-hooks
+
+.PHONY: docs
+docs: ## Regenerate README.md from README.md.gotmpl via helm-docs
+	bash scripts/helm-docs.sh
+
 .PHONY: test
 test: test-unit test-smoke-fast ## Run local fast checks
 

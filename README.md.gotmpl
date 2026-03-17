@@ -81,27 +81,7 @@ The value contract is validated by [values.schema.json](values.schema.json).
 
 This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [README.md.gotmpl](README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `nameOverride` | string | `""` | Override the default chart label name if needed. |
-| `commonLabels` | object | `{}` | Extra labels applied to every rendered resource. |
-| `commonAnnotations` | object | `{}` | Extra annotations applied to every rendered resource. |
-| `apiVersions.backendTLSPolicy` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for BackendTLSPolicy resources. |
-| `apiVersions.gatewayClass` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GatewayClass resources. |
-| `apiVersions.gateway` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for Gateway resources. |
-| `apiVersions.grpcRoute` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GRPCRoute resources. |
-| `apiVersions.httpRoute` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for HTTPRoute resources. |
-| `apiVersions.listenerSet` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ListenerSet resources. |
-| `apiVersions.referenceGrant` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ReferenceGrant resources. |
-| `apiVersions.tlsRoute` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for TLSRoute resources. |
-| `backendTLSPolicies` | list | `[]` | BackendTLSPolicy resources to render. |
-| `gatewayClasses` | list | `[]` | GatewayClass resources to render. |
-| `gateways` | list | `[]` | Gateway resources to render. |
-| `grpcRoutes` | list | `[]` | GRPCRoute resources to render. |
-| `httpRoutes` | list | `[]` | HTTPRoute resources to render. |
-| `listenerSets` | list | `[]` | ListenerSet resources to render. |
-| `referenceGrants` | list | `[]` | ReferenceGrant resources to render. |
-| `tlsRoutes` | list | `[]` | TLSRoute resources to render. |
+{{ template "chart.valuesTable" . }}
 
 ## Included Values Files
 
