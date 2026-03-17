@@ -39,7 +39,7 @@ Do not introduce parallel structures that solve the same problem twice. Avoid du
 ## Documentation Rules
 
 - Keep one root `README.md` as the primary entry point.
-- Keep `README.md` generated from `README.md.gotmpl` via `helm-docs` and `pre-commit`.
+- Keep `README.md` generated from `docs/README.md.gotmpl` via `helm-docs` and `pre-commit`.
 - Keep test-layer details in `docs/TESTS.MD`.
 - Keep repository-wide contribution and maintenance guidance in `docs/AGENTS.md`.
 - Use relative repository links in Markdown, not workstation-specific absolute paths.

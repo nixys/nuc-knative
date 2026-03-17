@@ -79,29 +79,29 @@ The value contract is validated by [values.schema.json](values.schema.json).
 
 ## Helm Values
 
-This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [README.md.gotmpl](README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
+This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [docs/README.md.gotmpl](docs/README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| `nameOverride` | string | `""` | Override the default chart label name if needed. |
-| `commonLabels` | object | `{}` | Extra labels applied to every rendered resource. |
-| `commonAnnotations` | object | `{}` | Extra annotations applied to every rendered resource. |
-| `apiVersions.backendTLSPolicy` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for BackendTLSPolicy resources. |
-| `apiVersions.gatewayClass` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GatewayClass resources. |
-| `apiVersions.gateway` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for Gateway resources. |
-| `apiVersions.grpcRoute` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GRPCRoute resources. |
-| `apiVersions.httpRoute` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for HTTPRoute resources. |
-| `apiVersions.listenerSet` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ListenerSet resources. |
-| `apiVersions.referenceGrant` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ReferenceGrant resources. |
-| `apiVersions.tlsRoute` | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for TLSRoute resources. |
-| `backendTLSPolicies` | list | `[]` | BackendTLSPolicy resources to render. |
-| `gatewayClasses` | list | `[]` | GatewayClass resources to render. |
-| `gateways` | list | `[]` | Gateway resources to render. |
-| `grpcRoutes` | list | `[]` | GRPCRoute resources to render. |
-| `httpRoutes` | list | `[]` | HTTPRoute resources to render. |
-| `listenerSets` | list | `[]` | ListenerSet resources to render. |
-| `referenceGrants` | list | `[]` | ReferenceGrant resources to render. |
-| `tlsRoutes` | list | `[]` | TLSRoute resources to render. |
+| apiVersions.backendTLSPolicy | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for BackendTLSPolicy resources. |
+| apiVersions.gateway | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for Gateway resources. |
+| apiVersions.gatewayClass | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GatewayClass resources. |
+| apiVersions.grpcRoute | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GRPCRoute resources. |
+| apiVersions.httpRoute | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for HTTPRoute resources. |
+| apiVersions.listenerSet | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ListenerSet resources. |
+| apiVersions.referenceGrant | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ReferenceGrant resources. |
+| apiVersions.tlsRoute | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for TLSRoute resources. |
+| backendTLSPolicies | list | `[]` | BackendTLSPolicy resources to render. |
+| commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
+| commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
+| gatewayClasses | list | `[]` | GatewayClass resources to render. |
+| gateways | list | `[]` | Gateway resources to render. |
+| grpcRoutes | list | `[]` | GRPCRoute resources to render. |
+| httpRoutes | list | `[]` | HTTPRoute resources to render. |
+| listenerSets | list | `[]` | ListenerSet resources to render. |
+| nameOverride | string | `""` | Override the default chart label name if needed. |
+| referenceGrants | list | `[]` | ReferenceGrant resources to render. |
+| tlsRoutes | list | `[]` | TLSRoute resources to render. |
 
 ## Included Values Files
 
@@ -131,6 +131,8 @@ make test-e2e
 
 Detailed test documentation is available in [docs/TESTS.MD](docs/TESTS.MD).
 
+Local setup instructions for the development and test toolchain are available in [docs/DEPENDENCY.md](docs/DEPENDENCY.md).
+
 The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run locally through [Makefile](Makefile) or directly via `tests/e2e/test-e2e.sh`.
 
 ## Notes
@@ -145,7 +147,7 @@ The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run
 |------|---------|
 | [Chart.yaml](Chart.yaml) | Chart metadata. |
 | [values.yaml](values.yaml) | Minimal default values and `helm-docs` source comments. |
-| [README.md.gotmpl](README.md.gotmpl) | Template used by `helm-docs` to build `README.md`. |
+| [docs/README.md.gotmpl](docs/README.md.gotmpl) | Template used by `helm-docs` to build `README.md`. |
 | [.pre-commit-config.yaml](.pre-commit-config.yaml) | Local hooks, including automatic `helm-docs` generation on commit. |
 | [values.yaml.example](values.yaml.example) | Full example configuration. |
 | [values.schema.json](values.schema.json) | JSON schema for chart values. |
@@ -153,4 +155,5 @@ The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run
 | [tests/units/](tests/units) | Compact Helm unit suites and backward compatibility checks. |
 | [tests/e2e/](tests/e2e) | kind-based end-to-end installation checks. |
 | [tests/smokes/](tests/smokes) | Smoke scenarios for render and schema validation. |
+| [docs/DEPENDENCY.md](docs/DEPENDENCY.md) | Local dependency installation guide for development and tests. |
 | [docs/TESTS.MD](docs/TESTS.MD) | Detailed testing documentation. |

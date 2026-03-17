@@ -19,7 +19,7 @@ hooks-install: ## Install local pre-commit hooks
 	pre-commit install-hooks
 
 .PHONY: docs
-docs: ## Regenerate README.md from README.md.gotmpl via helm-docs
+docs: ## Regenerate README.md from docs/README.md.gotmpl via helm-docs
 	bash scripts/helm-docs.sh
 
 .PHONY: test

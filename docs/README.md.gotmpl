@@ -79,7 +79,7 @@ The value contract is validated by [values.schema.json](values.schema.json).
 
 ## Helm Values
 
-This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [README.md.gotmpl](README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
+This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [docs/README.md.gotmpl](docs/README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
 
 {{ template "chart.valuesTable" . }}
 
@@ -111,6 +111,8 @@ make test-e2e
 
 Detailed test documentation is available in [docs/TESTS.MD](docs/TESTS.MD).
 
+Local setup instructions for the development and test toolchain are available in [docs/DEPENDENCY.md](docs/DEPENDENCY.md).
+
 The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run locally through [Makefile](Makefile) or directly via `tests/e2e/test-e2e.sh`.
 
 ## Notes
@@ -125,7 +127,7 @@ The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run
 |------|---------|
 | [Chart.yaml](Chart.yaml) | Chart metadata. |
 | [values.yaml](values.yaml) | Minimal default values and `helm-docs` source comments. |
-| [README.md.gotmpl](README.md.gotmpl) | Template used by `helm-docs` to build `README.md`. |
+| [docs/README.md.gotmpl](docs/README.md.gotmpl) | Template used by `helm-docs` to build `README.md`. |
 | [.pre-commit-config.yaml](.pre-commit-config.yaml) | Local hooks, including automatic `helm-docs` generation on commit. |
 | [values.yaml.example](values.yaml.example) | Full example configuration. |
 | [values.schema.json](values.schema.json) | JSON schema for chart values. |
@@ -133,4 +135,5 @@ The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run
 | [tests/units/](tests/units) | Compact Helm unit suites and backward compatibility checks. |
 | [tests/e2e/](tests/e2e) | kind-based end-to-end installation checks. |
 | [tests/smokes/](tests/smokes) | Smoke scenarios for render and schema validation. |
+| [docs/DEPENDENCY.md](docs/DEPENDENCY.md) | Local dependency installation guide for development and tests. |
 | [docs/TESTS.MD](docs/TESTS.MD) | Detailed testing documentation. |

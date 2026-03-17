@@ -56,7 +56,7 @@ The chart `version` should follow [semver](https://semver.org/). Any breaking (b
 
 ### Generate README
 
-The chart README is generated from [README.md.gotmpl](../README.md.gotmpl) and [values.yaml](../values.yaml) with [`norwoodj/helm-docs`](https://github.com/norwoodj/helm-docs).
+The chart README is generated from [docs/README.md.gotmpl](README.md.gotmpl) and [values.yaml](../values.yaml) with [`norwoodj/helm-docs`](https://github.com/norwoodj/helm-docs).
 
 Install the local git hook once:
 

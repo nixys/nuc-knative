@@ -6,7 +6,7 @@ ROOT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 if command -v helm-docs >/dev/null 2>&1; then
-  exec helm-docs --chart-search-root=. "$@"
+  exec helm-docs --chart-search-root=. --template-files=docs/README.md.gotmpl "$@"
 fi
 
 if command -v docker >/dev/null 2>&1; then
@@ -16,6 +16,7 @@ if command -v docker >/dev/null 2>&1; then
     --user "$(id -u):$(id -g)" \
     jnorwood/helm-docs:v1.14.2 \
     --chart-search-root=. \
+    --template-files=docs/README.md.gotmpl \
     "$@"
 fi
 
