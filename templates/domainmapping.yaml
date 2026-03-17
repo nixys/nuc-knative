@@ -1,0 +1,11 @@
+{{- range $index, $item := .Values.domainMappings }}
+---
+{{ include "nuc-knative.renderResource" (dict
+  "root" $
+  "item" $item
+  "kind" "DomainMapping"
+  "defaultApiVersion" $.Values.apiVersions.domainMapping
+  "resourceKey" (printf "domainMappings[%d]" $index)
+  "namespaced" true
+) }}
+{{- end }}

@@ -6,25 +6,32 @@ commonLabels: {}
 # -- Extra annotations applied to every rendered resource.
 commonAnnotations: {}
 
-# The defaults below are aligned with the current Gateway API standard channel.
-# Override them if your cluster uses another bundle version.
+# Default apiVersions for the supported Knative resources.
 apiVersions:
-  # -- Default apiVersion for BackendTLSPolicy resources.
-  backendTLSPolicy: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for GatewayClass resources.
-  gatewayClass: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for Gateway resources.
-  gateway: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for GRPCRoute resources.
-  grpcRoute: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for HTTPRoute resources.
-  httpRoute: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for ListenerSet resources.
-  listenerSet: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for ReferenceGrant resources.
-  referenceGrant: gateway.networking.k8s.io/v1
-  # -- Default apiVersion for TLSRoute resources.
-  tlsRoute: gateway.networking.k8s.io/v1
+  # -- Default apiVersion for Certificate resources.
+  certificate: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for ClusterDomainClaim resources.
+  clusterDomainClaim: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Configuration resources.
+  configuration: serving.knative.dev/v1
+  # -- Default apiVersion for DomainMapping resources.
+  domainMapping: serving.knative.dev/v1beta1
+  # -- Default apiVersion for Image resources.
+  image: caching.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Ingress resources.
+  ingress: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Metric resources.
+  metric: autoscaling.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for PodAutoscaler resources.
+  podAutoscaler: autoscaling.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Revision resources.
+  revision: serving.knative.dev/v1
+  # -- Default apiVersion for Route resources.
+  route: serving.knative.dev/v1
+  # -- Default apiVersion for ServerlessService resources.
+  serverlessService: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Service resources.
+  service: serving.knative.dev/v1
 
 # Each list item supports:
 # - name: required
@@ -35,26 +42,38 @@ apiVersions:
 # - spec: arbitrary resource spec
 # - status: optional raw status block for fixtures and synthetic manifests
 
-# -- BackendTLSPolicy resources to render.
-backendTLSPolicies: []
+# -- Certificate resources to render.
+certificates: []
 
-# -- GatewayClass resources to render.
-gatewayClasses: []
+# -- ClusterDomainClaim resources to render.
+clusterDomainClaims: []
 
-# -- Gateway resources to render.
-gateways: []
+# -- Configuration resources to render.
+configurations: []
 
-# -- GRPCRoute resources to render.
-grpcRoutes: []
+# -- DomainMapping resources to render.
+domainMappings: []
 
-# -- HTTPRoute resources to render.
-httpRoutes: []
+# -- Image resources to render.
+images: []
 
-# -- ListenerSet resources to render.
-listenerSets: []
+# -- Ingress resources to render.
+ingresses: []
 
-# -- ReferenceGrant resources to render.
-referenceGrants: []
+# -- Metric resources to render.
+metrics: []
 
-# -- TLSRoute resources to render.
-tlsRoutes: []
+# -- PodAutoscaler resources to render.
+podAutoscalers: []
+
+# -- Revision resources to render.
+revisions: []
+
+# -- Route resources to render.
+routes: []
+
+# -- ServerlessService resources to render.
+serverlessServices: []
+
+# -- Service resources to render.
+services: []

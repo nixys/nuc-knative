@@ -21,7 +21,7 @@ SCENARIO_CHOICES = [
 def build_parser() -> argparse.ArgumentParser:
     repo_root = Path(__file__).resolve().parents[3]
     parser = argparse.ArgumentParser(
-        description="Run smoke tests for the nuc-native-gateway chart."
+        description="Run smoke tests for the nuc-knative chart."
     )
     parser.add_argument(
         "--chart-dir",
@@ -59,12 +59,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=os.environ.get(
             "KUBECONFORM_CRD_SCHEMA_LOCATION", DEFAULT_SCHEMA_LOCATION
         ),
-        help="Additional kubeconform schema location for Gateway API CRDs.",
+        help="Additional kubeconform schema location for CRD-backed resources.",
     )
     parser.add_argument(
         "--skip-kinds",
         default=os.environ.get(
-            "KUBECONFORM_SKIP_KINDS", "ListenerSet,ReferenceGrant,TLSRoute"
+            "KUBECONFORM_SKIP_KINDS",
+            (
+                "Certificate,ClusterDomainClaim,Configuration,DomainMapping,Image,"
+                "Ingress,Metric,PodAutoscaler,Revision,Route,ServerlessService,Service"
+            ),
         ),
         help="Comma-separated kinds to skip in kubeconform.",
     )

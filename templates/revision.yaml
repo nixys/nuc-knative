@@ -1,0 +1,11 @@
+{{- range $index, $item := .Values.revisions }}
+---
+{{ include "nuc-knative.renderResource" (dict
+  "root" $
+  "item" $item
+  "kind" "Revision"
+  "defaultApiVersion" $.Values.apiVersions.revision
+  "resourceKey" (printf "revisions[%d]" $index)
+  "namespaced" true
+) }}
+{{- end }}

@@ -1,5 +1,6 @@
-gateways:
-  - namespace: edge
-    spec:
-      gatewayClassName: public-gateway-class
-
+services:
+  - spec:
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:latest

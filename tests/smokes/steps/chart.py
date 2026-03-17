@@ -27,7 +27,7 @@ def stage_chart(source_dir: Path, requested_workdir: str | None) -> tuple[Path, 
             shutil.rmtree(workdir)
         workdir.mkdir(parents=True, exist_ok=True)
     else:
-        workdir = Path(tempfile.mkdtemp(prefix="nuc-native-gateway-smokes-"))
+        workdir = Path(tempfile.mkdtemp(prefix="nuc-knative-smokes-"))
 
     chart_dir = workdir / "chart"
     chart_dir.mkdir(parents=True, exist_ok=True)
@@ -48,4 +48,3 @@ def stage_chart(source_dir: Path, requested_workdir: str | None) -> tuple[Path, 
 
 def cleanup(workdir: Path) -> None:
     shutil.rmtree(workdir, ignore_errors=True)
-

@@ -1,0 +1,11 @@
+{{- range $index, $item := .Values.podAutoscalers }}
+---
+{{ include "nuc-knative.renderResource" (dict
+  "root" $
+  "item" $item
+  "kind" "PodAutoscaler"
+  "defaultApiVersion" $.Values.apiVersions.podAutoscaler
+  "resourceKey" (printf "podAutoscalers[%d]" $index)
+  "namespaced" true
+) }}
+{{- end }}

@@ -1,35 +1,33 @@
-nameOverride: gateway-platform
+nameOverride: knative-platform
 
 commonLabels:
-  platform: gateway-api
-  component: shared
-  tier: common
+  platform: knative
 
 commonAnnotations:
   team: platform
-  note: common
 
 apiVersions:
-  gatewayClass: gateway.networking.k8s.io/v1beta1
+  service: example.net/v1alpha1
+  clusterDomainClaim: networking.internal.knative.dev/v1beta1
 
-gateways:
-  - name: merged-gateway
-    apiVersion: example.net/v1alpha1
+services:
+  - name: merged-service
     labels:
-      component: gateway
-      tier: edge
+      component: service
+      tier: public
     annotations:
-      note: external
+      note: public-entrypoint
     spec:
-      gatewayClassName: public-gateway-class
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:1.0.0
 
-gatewayClasses:
-  - name: public-gateway-class
-    namespace: should-not-render
+clusterDomainClaims:
+  - name: models.internal.example.com
     labels:
-      component: gateway-class
+      component: cluster-domain-claim
     annotations:
-      note: public
+      note: cluster-scope
     spec:
-      controllerName: example.net/gateway-controller
-
+      namespace: smoke-namespace

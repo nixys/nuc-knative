@@ -85,36 +85,44 @@ def check_rendering_contract(context: SmokeContext) -> None:
     documents = render.load_documents(output_path)
     render.assert_doc_count(documents, 2)
 
-    gateway = render.select_document(documents, kind="Gateway", name="merged-gateway")
-    render.assert_path(gateway, "apiVersion", "example.net/v1alpha1")
-    render.assert_path(gateway, "metadata.namespace", context.namespace)
+    service = render.select_document(documents, kind="Service", name="merged-service")
+    render.assert_path(service, "apiVersion", "example.net/v1alpha1")
+    render.assert_path(service, "metadata.namespace", context.namespace)
     render.assert_path(
-        gateway,
+        service,
         "metadata.labels[app.kubernetes.io/name]",
-        "gateway-platform",
+        "knative-platform",
     )
-    render.assert_path(gateway, "metadata.labels.platform", "gateway-api")
-    render.assert_path(gateway, "metadata.labels.component", "gateway")
-    render.assert_path(gateway, "metadata.labels.tier", "edge")
-    render.assert_path(gateway, "metadata.annotations.team", "platform")
-    render.assert_path(gateway, "metadata.annotations.note", "external")
-    render.assert_path(gateway, "spec.gatewayClassName", "public-gateway-class")
+    render.assert_path(service, "metadata.labels.platform", "knative")
+    render.assert_path(service, "metadata.labels.component", "service")
+    render.assert_path(service, "metadata.labels.tier", "public")
+    render.assert_path(service, "metadata.annotations.team", "platform")
+    render.assert_path(service, "metadata.annotations.note", "public-entrypoint")
+    render.assert_path(
+        service,
+        "spec.template.spec.containers[0].image",
+        "ghcr.io/example/predictor:1.0.0",
+    )
 
-    gateway_class = render.select_document(
-        documents, kind="GatewayClass", name="public-gateway-class"
+    cluster_domain_claim = render.select_document(
+        documents, kind="ClusterDomainClaim", name="models.internal.example.com"
     )
-    render.assert_path(gateway_class, "apiVersion", "gateway.networking.k8s.io/v1beta1")
-    render.assert_path_missing(gateway_class, "metadata.namespace")
     render.assert_path(
-        gateway_class,
+        cluster_domain_claim, "apiVersion", "networking.internal.knative.dev/v1beta1"
+    )
+    render.assert_path_missing(cluster_domain_claim, "metadata.namespace")
+    render.assert_path(
+        cluster_domain_claim,
         "metadata.labels[app.kubernetes.io/name]",
-        "gateway-platform",
+        "knative-platform",
     )
-    render.assert_path(gateway_class, "metadata.labels.component", "gateway-class")
-    render.assert_path(gateway_class, "metadata.annotations.team", "platform")
-    render.assert_path(gateway_class, "metadata.annotations.note", "public")
     render.assert_path(
-        gateway_class, "spec.controllerName", "example.net/gateway-controller"
+        cluster_domain_claim, "metadata.labels.component", "cluster-domain-claim"
+    )
+    render.assert_path(cluster_domain_claim, "metadata.annotations.team", "platform")
+    render.assert_path(cluster_domain_claim, "metadata.annotations.note", "cluster-scope")
+    render.assert_path(
+        cluster_domain_claim, "spec.namespace", "smoke-namespace"
     )
 
 
@@ -135,42 +143,48 @@ def check_example_render(context: SmokeContext) -> None:
     )
 
     documents = render.load_documents(output_path)
-    render.assert_doc_count(documents, 9)
+    render.assert_doc_count(documents, 12)
     render.assert_kinds(
         documents,
         {
-            "BackendTLSPolicy",
-            "GatewayClass",
-            "Gateway",
-            "GRPCRoute",
-            "HTTPRoute",
-            "ListenerSet",
-            "ReferenceGrant",
-            "TLSRoute",
+            "Certificate",
+            "ClusterDomainClaim",
+            "Configuration",
+            "DomainMapping",
+            "Image",
+            "Ingress",
+            "Metric",
+            "PodAutoscaler",
+            "Revision",
+            "Route",
+            "ServerlessService",
+            "Service",
         },
     )
 
-    gateway_class = render.select_document(
-        documents, kind="GatewayClass", name="public-gateway-class"
+    cluster_domain_claim = render.select_document(
+        documents, kind="ClusterDomainClaim", name="models.example.com"
     )
-    render.assert_path_missing(gateway_class, "metadata.namespace")
+    render.assert_path_missing(cluster_domain_claim, "metadata.namespace")
 
-    gateway = render.select_document(documents, kind="Gateway", name="edge-gateway")
-    render.assert_path(gateway, "metadata.namespace", "edge-ns")
-    render.assert_path(gateway, "spec.listeners[0].protocol", "HTTPS")
+    service = render.select_document(documents, kind="Service", name="sklearn-svc")
+    render.assert_path(service, "metadata.namespace", "kserve-user")
+    render.assert_path(service, "spec.template.spec.containers[0].env[0].value", "sklearn")
 
-    backend_tls = render.select_document(
-        documents, kind="BackendTLSPolicy", name="backend-tls-with-wellknown"
+    configuration = render.select_document(
+        documents, kind="Configuration", name="sklearn-config"
     )
     render.assert_path(
-        backend_tls, "spec.validation.wellKnownCACertificates", "System"
+        configuration, "spec.template.spec.containers[0].ports[0].containerPort", 8080
     )
 
-    http_route = render.select_document(documents, kind="HTTPRoute", name="api-http")
-    render.assert_path(http_route, "spec.rules[0].filters[4].cors.maxAge", 86400)
+    ingress = render.select_document(documents, kind="Ingress", name="sklearn-ingress")
+    render.assert_path(
+        ingress, "spec.rules[0].http.paths[0].splits[0].serviceName", "activator-service"
+    )
 
-    tls_route = render.select_document(documents, kind="TLSRoute", name="passthrough-tls")
-    render.assert_path(tls_route, "spec.rules[0].backendRefs[1].port", 8443)
+    route = render.select_document(documents, kind="Route", name="sklearn-route")
+    render.assert_path(route, "spec.traffic[0].revisionName", "sklearn-config-00001")
 
 
 def check_example_kubeconform(context: SmokeContext) -> None:

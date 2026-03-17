@@ -1,159 +1,58 @@
-# NUC Native Gateway
+# NUC Knative
 
-Helm chart for rendering Kubernetes Gateway API resources from declarative values.
+Helm chart for rendering Knative Serving and Knative internal resources often used around KServe installations.
 
-The chart does not install Gateway API CRDs or any controller. It only renders Gateway API objects that are already supported by the target cluster and controller.
-
-## Quick Start
-
-Render the example configuration:
-
-```bash
-helm template nuc-native-gateway . -f values.yaml.example
-```
-
-Install the chartsss:
-
-```bash
-helm install nuc-native-gateway . \
-  --namespace gateway-system \
-  --create-namespace \
-  -f values.yaml.example
-```
-
-Install the local README generator hook:
-
-```bash
-pre-commit install
-pre-commit install-hooks
-```
+The chart does not install Knative or KServe CRDs. It only renders resource instances for CRDs that already exist in the target cluster.
 
 ## Supported Resources
 
-The chart can render these Gateway API kinds:
+- `Certificate`
+- `ClusterDomainClaim`
+- `Configuration`
+- `DomainMapping`
+- `Image`
+- `Ingress`
+- `Metric`
+- `PodAutoscaler`
+- `Revision`
+- `Route`
+- `ServerlessService`
+- `Service`
 
-- `BackendTLSPolicy`
-- `GatewayClass`
-- `Gateway`
-- `GRPCRoute`
-- `HTTPRoute`
-- `ListenerSet`
-- `ReferenceGrant`
-- `TLSRoute`
+## Quick Start
 
-Support for individual kinds and fields still depends on the Gateway API bundle and controller installed in the cluster.
+```bash
+helm template nuc-knative . -f values.yaml.example
+helm install nuc-knative . --namespace kserve-user --create-namespace -f values.yaml.example
+```
 
-## Values Model
+## Values
 
-Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
+Each supported resource kind is represented by one top-level list in `values.yaml`:
 
-- `backendTLSPolicies`
-- `gatewayClasses`
-- `gateways`
-- `grpcRoutes`
-- `httpRoutes`
-- `listenerSets`
-- `referenceGrants`
-- `tlsRoutes`
+- `certificates`
+- `clusterDomainClaims`
+- `configurations`
+- `domainMappings`
+- `images`
+- `ingresses`
+- `metrics`
+- `podAutoscalers`
+- `revisions`
+- `routes`
+- `serverlessServices`
+- `services`
 
-Every list item uses the same generic contract:
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `name` | yes | Resource name. |
-| `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped resources. |
-| `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
-| `annotations` | no | Annotations merged on top of `commonAnnotations`. |
-| `apiVersion` | no | Per-resource API version override. |
-| `spec` | no | Raw resource spec rendered as-is. |
-| `status` | no | Optional raw status block. Usually not managed through Helm in production. |
-
-Global controls:
-
-- `nameOverride`
-- `commonLabels`
-- `commonAnnotations`
-- `apiVersions.*`
-
-The value contract is validated by [values.schema.json](values.schema.json).
-
-## Helm Values
-
-This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [docs/README.md.gotmpl](docs/README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| apiVersions.backendTLSPolicy | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for BackendTLSPolicy resources. |
-| apiVersions.gateway | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for Gateway resources. |
-| apiVersions.gatewayClass | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GatewayClass resources. |
-| apiVersions.grpcRoute | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for GRPCRoute resources. |
-| apiVersions.httpRoute | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for HTTPRoute resources. |
-| apiVersions.listenerSet | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ListenerSet resources. |
-| apiVersions.referenceGrant | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for ReferenceGrant resources. |
-| apiVersions.tlsRoute | string | `"gateway.networking.k8s.io/v1"` | Default apiVersion for TLSRoute resources. |
-| backendTLSPolicies | list | `[]` | BackendTLSPolicy resources to render. |
-| commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
-| commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
-| gatewayClasses | list | `[]` | GatewayClass resources to render. |
-| gateways | list | `[]` | Gateway resources to render. |
-| grpcRoutes | list | `[]` | GRPCRoute resources to render. |
-| httpRoutes | list | `[]` | HTTPRoute resources to render. |
-| listenerSets | list | `[]` | ListenerSet resources to render. |
-| nameOverride | string | `""` | Override the default chart label name if needed. |
-| referenceGrants | list | `[]` | ReferenceGrant resources to render. |
-| tlsRoutes | list | `[]` | TLSRoute resources to render. |
-
-## Included Values Files
-
-- [values.yaml](values.yaml): minimal defaults that render no resources.
-- [values.yaml.example](values.yaml.example): complete example covering every supported resource type.
-
-Use [values.yaml.example](values.yaml.example) as a starting point and remove the sections you do not need.
+Every item supports `name`, `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`.
 
 ## Testing
 
-The repository uses three test layers:
-
-- `tests/units/` for `helm-unittest` suites and backward compatibility checks
-- `tests/e2e/` for local kind-based Helm install checks against real Gateway API CRDs
-- `tests/smokes/` for render and schema smoke scenarios
-
-Representative local commands:
-
 ```bash
-helm lint . -f values.yaml.example
-helm template nuc-native-gateway . -f values.yaml.example
-helm unittest -f 'tests/units/*_test.yaml' .
-sh tests/units/backward_compatibility_test.sh
-python3 tests/smokes/run/smoke.py --scenario example-render
+make lint
+make test-unit
+make test-compat
+make test-smoke
 make test-e2e
 ```
 
-Detailed test documentation is available in [docs/TESTS.MD](docs/TESTS.MD).
-
-Local setup instructions for the development and test toolchain are available in [docs/DEPENDENCY.md](docs/DEPENDENCY.md).
-
-The `e2e` layer is intentionally kept out of GitLab CI and is expected to be run locally through [Makefile](Makefile) or directly via `tests/e2e/test-e2e.sh`.
-
-## Notes
-
-- Keep the chart API versions aligned with the Gateway API CRDs installed in the cluster.
-- `ListenerSet` support is controller-dependent and may rely on experimental APIs.
-- Prefer managing `spec` through Helm and let the controller own `status`.
-
-## Repository Layout
-
-| Path | Purpose |
-|------|---------|
-| [Chart.yaml](Chart.yaml) | Chart metadata. |
-| [values.yaml](values.yaml) | Minimal default values and `helm-docs` source comments. |
-| [docs/README.md.gotmpl](docs/README.md.gotmpl) | Template used by `helm-docs` to build `README.md`. |
-| [.pre-commit-config.yaml](.pre-commit-config.yaml) | Local hooks, including automatic `helm-docs` generation on commit. |
-| [values.yaml.example](values.yaml.example) | Full example configuration. |
-| [values.schema.json](values.schema.json) | JSON schema for chart values. |
-| [templates/](templates) | One template per supported Gateway API kind plus shared helpers. |
-| [tests/units/](tests/units) | Compact Helm unit suites and backward compatibility checks. |
-| [tests/e2e/](tests/e2e) | kind-based end-to-end installation checks. |
-| [tests/smokes/](tests/smokes) | Smoke scenarios for render and schema validation. |
-| [docs/DEPENDENCY.md](docs/DEPENDENCY.md) | Local dependency installation guide for development and tests. |
-| [docs/TESTS.MD](docs/TESTS.MD) | Detailed testing documentation. |
+`tests/e2e/` installs local CRD fixtures for the required Knative resource kinds and then verifies that Helm can create all example resources in a disposable `kind` cluster.

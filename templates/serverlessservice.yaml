@@ -1,0 +1,11 @@
+{{- range $index, $item := .Values.serverlessServices }}
+---
+{{ include "nuc-knative.renderResource" (dict
+  "root" $
+  "item" $item
+  "kind" "ServerlessService"
+  "defaultApiVersion" $.Values.apiVersions.serverlessService
+  "resourceKey" (printf "serverlessServices[%d]" $index)
+  "namespaced" true
+) }}
+{{- end }}

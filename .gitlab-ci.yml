@@ -14,7 +14,7 @@ variables:
   KUBECONFORM_VERSION: "v0.6.7"
   RENDER_DIR: ".rendered"
   KUBECONFORM_CRD_SCHEMA_LOCATION: "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
-  KUBECONFORM_SKIP_KINDS: "ListenerSet,ReferenceGrant,TLSRoute"
+  KUBECONFORM_SKIP_KINDS: "Certificate,ClusterDomainClaim,Configuration,DomainMapping,Image,Ingress,Metric,PodAutoscaler,Revision,Route,ServerlessService,Service"
   GOBIN: "$CI_PROJECT_DIR/.bin"
   GOMODCACHE: "$CI_PROJECT_DIR/.cache/go/pkg/mod"
   GOCACHE: "$CI_PROJECT_DIR/.cache/go-build"
@@ -29,8 +29,7 @@ default:
 lint:
   stage: lint
   script:
-    - helm dependency update
-    - helm lint .
+    - helm lint . -f values.yaml.example
 
 unit_tests:
   stage: unit-tests

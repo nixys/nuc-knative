@@ -4,149 +4,88 @@ commonLabels:
 commonAnnotations:
   test-suite: e2e
 
-apiVersions:
-  backendTLSPolicy: gateway.networking.k8s.io/v1
-  gatewayClass: gateway.networking.k8s.io/v1
-  gateway: gateway.networking.k8s.io/v1
-  grpcRoute: gateway.networking.k8s.io/v1
-  httpRoute: gateway.networking.k8s.io/v1
-  referenceGrant: gateway.networking.k8s.io/v1beta1
-  tlsRoute: gateway.networking.k8s.io/v1alpha2
-
-backendTLSPolicies:
-  - name: e2e-backend-tls
+certificates:
+  - name: e2e-cert
     spec:
-      targetRefs:
-        - group: ""
-          kind: Service
-          name: e2e-backend
-          sectionName: https
-      validation:
-        hostname: backend.e2e.internal
-        wellKnownCACertificates: System
+      dnsNames:
+        - webhook.nuc-knative-e2e.svc
+      secretName: e2e-cert
+      domain: webhook.nuc-knative-e2e.svc.cluster.local
 
-gatewayClasses:
-  - name: e2e-gateway-class
+clusterDomainClaims:
+  - name: e2e.models.example.com
     spec:
-      controllerName: example.net/gateway-controller
+      namespace: nuc-knative-e2e
 
-gateways:
-  - name: e2e-gateway
+configurations:
+  - name: e2e-config
     spec:
-      gatewayClassName: e2e-gateway-class
-      listeners:
-        - name: http
-          port: 80
-          protocol: HTTP
-          allowedRoutes:
-            namespaces:
-              from: Same
-            kinds:
-              - group: gateway.networking.k8s.io
-                kind: HTTPRoute
-        - name: grpc
-          port: 50051
-          protocol: HTTPS
-          tls:
-            mode: Terminate
-            certificateRefs:
-              - group: ""
-                kind: Secret
-                name: e2e-gateway-cert
-          allowedRoutes:
-            namespaces:
-              from: Same
-            kinds:
-              - group: gateway.networking.k8s.io
-                kind: GRPCRoute
-        - name: tls
-          port: 443
-          protocol: TLS
-          tls:
-            mode: Passthrough
-          allowedRoutes:
-            namespaces:
-              from: Same
-            kinds:
-              - group: gateway.networking.k8s.io
-                kind: TLSRoute
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:e2e
 
-grpcRoutes:
-  - name: e2e-grpc
+domainMappings:
+  - name: e2e.models.example.com
     spec:
-      parentRefs:
-        - group: gateway.networking.k8s.io
-          kind: Gateway
-          name: e2e-gateway
-          sectionName: grpc
-          port: 50051
-      hostnames:
-        - grpc.e2e.example.com
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: e2e-service
+
+images:
+  - name: e2e-image
+    spec:
+      image: ghcr.io/example/predictor:e2e
+
+ingresses:
+  - name: e2e-ingress
+    spec:
       rules:
-        - name: inventory
-          matches:
-            - method:
-                type: Exact
-                service: inventory.v1.InventoryService
-                method: GetItem
-          backendRefs:
-            - group: ""
-              kind: Service
-              name: e2e-grpc-backend
-              port: 9090
+        - hosts:
+            - e2e.models.example.com
 
-httpRoutes:
-  - name: e2e-http
+metrics:
+  - name: e2e-metric
     spec:
-      parentRefs:
-        - group: gateway.networking.k8s.io
-          kind: Gateway
-          name: e2e-gateway
-          sectionName: http
-          port: 80
-      hostnames:
-        - api.e2e.example.com
-      rules:
-        - name: api
-          matches:
-            - path:
-                type: PathPrefix
-                value: /api
-          backendRefs:
-            - group: ""
-              kind: Service
-              name: e2e-backend
-              port: 8080
+      stableWindow: 60s
 
-referenceGrants:
-  - name: e2e-referencegrant
+podAutoscalers:
+  - name: e2e-pa
     spec:
-      from:
-        - group: gateway.networking.k8s.io
-          kind: HTTPRoute
-          namespace: nuc-native-gateway-e2e
-        - group: gateway.networking.k8s.io
-          kind: GRPCRoute
-          namespace: nuc-native-gateway-e2e
-      to:
-        - group: ""
-          kind: Secret
+      protocolType: http1
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: e2e-deployment
 
-tlsRoutes:
-  - name: e2e-tls
+revisions:
+  - name: e2e-revision
     spec:
-      parentRefs:
-        - group: gateway.networking.k8s.io
-          kind: Gateway
-          name: e2e-gateway
-          sectionName: tls
-          port: 443
-      hostnames:
-        - passthrough.e2e.example.com
-      rules:
-        - name: passthrough
-          backendRefs:
-            - group: ""
-              kind: Service
-              name: e2e-tls-backend
-              port: 8443
+      containers:
+        - image: ghcr.io/example/predictor:e2e
+
+routes:
+  - name: e2e-route
+    spec:
+      traffic:
+        - percent: 100
+          revisionName: e2e-revision
+          latestRevision: false
+
+serverlessServices:
+  - name: e2e-sks
+    spec:
+      mode: Serve
+      objectRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: e2e-deployment
+
+services:
+  - name: e2e-service
+    spec:
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:e2e

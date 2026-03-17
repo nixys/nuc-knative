@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "title": "nuc-native-gateway values",
-  "description": "Schema for nuc-native-gateway Helm chart values.",
+  "title": "nuc-knative values",
+  "description": "Schema for nuc-knative Helm chart values.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -19,66 +19,70 @@
     },
     "apiVersions": {
       "type": "object",
-      "description": "Default API version overrides per supported Gateway API kind.",
+      "description": "Default API version overrides per supported Knative kind.",
       "additionalProperties": false,
       "properties": {
-        "backendTLSPolicy": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "gatewayClass": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "gateway": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "grpcRoute": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "httpRoute": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "listenerSet": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "referenceGrant": {
-          "$ref": "#/definitions/nonEmptyString"
-        },
-        "tlsRoute": {
-          "$ref": "#/definitions/nonEmptyString"
-        }
+        "certificate": { "$ref": "#/definitions/nonEmptyString" },
+        "clusterDomainClaim": { "$ref": "#/definitions/nonEmptyString" },
+        "configuration": { "$ref": "#/definitions/nonEmptyString" },
+        "domainMapping": { "$ref": "#/definitions/nonEmptyString" },
+        "image": { "$ref": "#/definitions/nonEmptyString" },
+        "ingress": { "$ref": "#/definitions/nonEmptyString" },
+        "metric": { "$ref": "#/definitions/nonEmptyString" },
+        "podAutoscaler": { "$ref": "#/definitions/nonEmptyString" },
+        "revision": { "$ref": "#/definitions/nonEmptyString" },
+        "route": { "$ref": "#/definitions/nonEmptyString" },
+        "serverlessService": { "$ref": "#/definitions/nonEmptyString" },
+        "service": { "$ref": "#/definitions/nonEmptyString" }
       }
     },
-    "backendTLSPolicies": {
+    "certificates": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of BackendTLSPolicy resources."
+      "description": "List of Certificate resources."
     },
-    "gatewayClasses": {
+    "clusterDomainClaims": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of GatewayClass resources."
+      "description": "List of ClusterDomainClaim resources."
     },
-    "gateways": {
+    "configurations": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of Gateway resources."
+      "description": "List of Configuration resources."
     },
-    "grpcRoutes": {
+    "domainMappings": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of GRPCRoute resources."
+      "description": "List of DomainMapping resources."
     },
-    "httpRoutes": {
+    "images": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of HTTPRoute resources."
+      "description": "List of Image resources."
     },
-    "listenerSets": {
+    "ingresses": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of ListenerSet resources."
+      "description": "List of Ingress resources."
     },
-    "referenceGrants": {
+    "metrics": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of ReferenceGrant resources."
+      "description": "List of Metric resources."
     },
-    "tlsRoutes": {
+    "podAutoscalers": {
       "$ref": "#/definitions/resourceList",
-      "description": "List of TLSRoute resources."
+      "description": "List of PodAutoscaler resources."
+    },
+    "revisions": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of Revision resources."
+    },
+    "routes": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of Route resources."
+    },
+    "serverlessServices": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of ServerlessService resources."
+    },
+    "services": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of Service resources."
     }
   },
   "definitions": {
@@ -99,15 +103,12 @@
     },
     "freeFormObject": {
       "type": "object",
-      "description": "Arbitrary Gateway API payload passed through by the chart.",
       "additionalProperties": true
     },
     "resourceItem": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name"
-      ],
+      "required": ["name"],
       "properties": {
         "name": {
           "$ref": "#/definitions/nonEmptyString",
