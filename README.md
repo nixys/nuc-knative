@@ -40,7 +40,7 @@ helm install nuc-knative . \
 
 ## Values Model
 
-Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
+Each top-level map in [values.yaml](values.yaml) maps to one resource kind:
 
 - `certificates`
 - `clusterDomainClaims`
@@ -55,11 +55,10 @@ Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
 - `serverlessServices`
 - `services`
 
-Each list item uses the same contract:
+Each map entry uses the same contract. The entry key becomes the resource name:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `name` | yes | Resource name. |
 | `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped resources. |
 | `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
 | `annotations` | no | Annotations merged on top of `commonAnnotations`. |
@@ -92,29 +91,28 @@ Nested contract fields are exposed in the generated Helm values table under `res
 | apiVersions.route | string | `"serving.knative.dev/v1"` | Default apiVersion for Route resources. |
 | apiVersions.serverlessService | string | `"networking.internal.knative.dev/v1alpha1"` | Default apiVersion for ServerlessService resources. |
 | apiVersions.service | string | `"serving.knative.dev/v1"` | Default apiVersion for Service resources. |
-| certificates | list | `[]` | Certificate resources to render. |
-| clusterDomainClaims | list | `[]` | ClusterDomainClaim resources to render. |
+| certificates | object | `{}` | Certificate resources keyed by resource name. |
+| clusterDomainClaims | object | `{}` | ClusterDomainClaim resources keyed by resource name. |
 | commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
 | commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
-| configurations | list | `[]` | Configuration resources to render. |
-| domainMappings | list | `[]` | DomainMapping resources to render. |
-| images | list | `[]` | Image resources to render. |
-| ingresses | list | `[]` | Ingress resources to render. |
-| metrics | list | `[]` | Metric resources to render. |
+| configurations | object | `{}` | Configuration resources keyed by resource name. |
+| domainMappings | object | `{}` | DomainMapping resources keyed by resource name. |
+| images | object | `{}` | Image resources keyed by resource name. |
+| ingresses | object | `{}` | Ingress resources keyed by resource name. |
+| metrics | object | `{}` | Metric resources keyed by resource name. |
 | nameOverride | string | `""` | Override the default chart label name if needed. |
-| podAutoscalers | list | `[]` | PodAutoscaler resources to render. |
-| resourceItemContract | object | `{"annotations":{"exampleKey":"example-value"},"apiVersion":"example.group/v1alpha1","labels":{"exampleKey":"example-value"},"name":"example-name","namespace":"example-namespace","spec":{"exampleField":"example-value"},"status":{"exampleField":"example-value"}}` | Documentation-only contract for a single resource item. Templates ignore this block; it exists so helm-docs can describe nested fields such as `name`, `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`. |
+| podAutoscalers | object | `{}` | PodAutoscaler resources keyed by resource name. |
+| resourceItemContract | object | `{"annotations":{"exampleKey":"example-value"},"apiVersion":"example.group/v1alpha1","labels":{"exampleKey":"example-value"},"namespace":"example-namespace","spec":{"exampleField":"example-value"},"status":{"exampleField":"example-value"}}` | Documentation-only contract for a single resource map entry. The map key becomes the resource name. Templates ignore this block; it exists so helm-docs can describe nested fields such as `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`. |
 | resourceItemContract.annotations.exampleKey | string | `"example-value"` | Example annotation value. Real items may use arbitrary keys and values. |
 | resourceItemContract.apiVersion | string | `"example.group/v1alpha1"` | Example per-resource apiVersion override. |
 | resourceItemContract.labels.exampleKey | string | `"example-value"` | Example label value. Real items may use arbitrary keys and values. |
-| resourceItemContract.name | string | `"example-name"` | Example resource name. Real items must provide a unique value. |
 | resourceItemContract.namespace | string | `"example-namespace"` | Example namespace for namespaced resources. Cluster-scoped kinds ignore this field. |
 | resourceItemContract.spec.exampleField | string | `"example-value"` | Example spec field. Replace with the real CRD spec payload for the selected kind. |
 | resourceItemContract.status.exampleField | string | `"example-value"` | Example status field. Usually only useful for fixtures and synthetic manifests. |
-| revisions | list | `[]` | Revision resources to render. |
-| routes | list | `[]` | Route resources to render. |
-| serverlessServices | list | `[]` | ServerlessService resources to render. |
-| services | list | `[]` | Service resources to render. |
+| revisions | object | `{}` | Revision resources keyed by resource name. |
+| routes | object | `{}` | Route resources keyed by resource name. |
+| serverlessServices | object | `{}` | ServerlessService resources keyed by resource name. |
+| services | object | `{}` | Service resources keyed by resource name. |
 
 ## Included Values Files
 

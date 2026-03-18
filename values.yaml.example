@@ -24,7 +24,7 @@ apiVersions:
   service: serving.knative.dev/v1
 
 certificates:
-  - name: predictor-cert
+  predictor-cert:
     namespace: kserve-system
     labels:
       component: certificate
@@ -37,7 +37,7 @@ certificates:
       domain: webhook.kserve-system.svc.cluster.local
 
 clusterDomainClaims:
-  - name: models.example.com
+  models.example.com:
     labels:
       component: domain-claim
     annotations:
@@ -46,7 +46,7 @@ clusterDomainClaims:
       namespace: tenant-a
 
 configurations:
-  - name: sklearn-config
+  sklearn-config:
     namespace: kserve-user
     labels:
       component: configuration
@@ -66,7 +66,7 @@ configurations:
                 - containerPort: 8080
 
 domainMappings:
-  - name: sklearn.models.example.com
+  sklearn.models.example.com:
     namespace: kserve-user
     labels:
       component: domain-mapping
@@ -81,7 +81,7 @@ domainMappings:
         secretName: predictor-webhook-cert
 
 images:
-  - name: sklearn-image-cache
+  sklearn-image-cache:
     namespace: kserve-user
     labels:
       component: image-cache
@@ -91,7 +91,7 @@ images:
       image: ghcr.io/example/sklearnserver:latest
 
 ingresses:
-  - name: sklearn-ingress
+  sklearn-ingress:
     namespace: kserve-user
     labels:
       component: ingress
@@ -110,7 +110,7 @@ ingresses:
                     percent: 100
 
 metrics:
-  - name: sklearn-metric
+  sklearn-metric:
     namespace: kserve-user
     labels:
       component: metric
@@ -122,7 +122,7 @@ metrics:
       scrapeTarget: queue-proxy
 
 podAutoscalers:
-  - name: sklearn-pa
+  sklearn-pa:
     namespace: kserve-user
     labels:
       component: pod-autoscaler
@@ -137,7 +137,7 @@ podAutoscalers:
       containerConcurrency: 5
 
 revisions:
-  - name: sklearn-config-00001
+  sklearn-config-00001:
     namespace: kserve-user
     labels:
       component: revision
@@ -153,7 +153,7 @@ revisions:
               value: s3://models/sklearn
 
 routes:
-  - name: sklearn-route
+  sklearn-route:
     namespace: kserve-user
     labels:
       component: route
@@ -166,7 +166,7 @@ routes:
           latestRevision: false
 
 serverlessServices:
-  - name: sklearn-sks
+  sklearn-sks:
     namespace: kserve-user
     labels:
       component: sks
@@ -182,7 +182,7 @@ serverlessServices:
       protocolType: HTTP1
 
 services:
-  - name: sklearn-svc
+  sklearn-svc:
     namespace: kserve-user
     labels:
       component: service

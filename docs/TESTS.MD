@@ -21,7 +21,7 @@ The unit layer verifies:
 The smoke suite verifies:
 
 - default empty rendering
-- schema enforcement for missing `name`
+- schema enforcement for map-based resource values
 - rendering contract behavior
 - example rendering across all 12 supported kinds
 - optional `kubeconform` execution

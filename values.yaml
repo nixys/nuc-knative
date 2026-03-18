@@ -33,8 +33,8 @@ apiVersions:
   # -- Default apiVersion for Service resources.
   service: serving.knative.dev/v1
 
-# Each list item supports:
-# - name: required
+# Each resource map entry supports:
+# - map key: required resource name
 # - namespace: optional for namespaced resources, defaults to the release namespace
 # - labels: optional
 # - annotations: optional
@@ -42,10 +42,8 @@ apiVersions:
 # - spec: arbitrary resource spec
 # - status: optional raw status block for fixtures and synthetic manifests
 
-# -- Documentation-only contract for a single resource item. Templates ignore this block; it exists so helm-docs can describe nested fields such as `name`, `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`.
+# -- Documentation-only contract for a single resource map entry. The map key becomes the resource name. Templates ignore this block; it exists so helm-docs can describe nested fields such as `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`.
 resourceItemContract:
-  # -- Example resource name. Real items must provide a unique value.
-  name: example-name
   # -- Example namespace for namespaced resources. Cluster-scoped kinds ignore this field.
   namespace: example-namespace
   labels:
@@ -63,38 +61,38 @@ resourceItemContract:
     # -- Example status field. Usually only useful for fixtures and synthetic manifests.
     exampleField: example-value
 
-# -- Certificate resources to render.
-certificates: []
+# -- Certificate resources keyed by resource name.
+certificates: {}
 
-# -- ClusterDomainClaim resources to render.
-clusterDomainClaims: []
+# -- ClusterDomainClaim resources keyed by resource name.
+clusterDomainClaims: {}
 
-# -- Configuration resources to render.
-configurations: []
+# -- Configuration resources keyed by resource name.
+configurations: {}
 
-# -- DomainMapping resources to render.
-domainMappings: []
+# -- DomainMapping resources keyed by resource name.
+domainMappings: {}
 
-# -- Image resources to render.
-images: []
+# -- Image resources keyed by resource name.
+images: {}
 
-# -- Ingress resources to render.
-ingresses: []
+# -- Ingress resources keyed by resource name.
+ingresses: {}
 
-# -- Metric resources to render.
-metrics: []
+# -- Metric resources keyed by resource name.
+metrics: {}
 
-# -- PodAutoscaler resources to render.
-podAutoscalers: []
+# -- PodAutoscaler resources keyed by resource name.
+podAutoscalers: {}
 
-# -- Revision resources to render.
-revisions: []
+# -- Revision resources keyed by resource name.
+revisions: {}
 
-# -- Route resources to render.
-routes: []
+# -- Route resources keyed by resource name.
+routes: {}
 
-# -- ServerlessService resources to render.
-serverlessServices: []
+# -- ServerlessService resources keyed by resource name.
+serverlessServices: {}
 
-# -- Service resources to render.
-services: []
+# -- Service resources keyed by resource name.
+services: {}

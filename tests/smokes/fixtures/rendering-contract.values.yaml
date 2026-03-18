@@ -11,7 +11,7 @@ apiVersions:
   clusterDomainClaim: networking.internal.knative.dev/v1beta1
 
 services:
-  - name: merged-service
+  merged-service:
     labels:
       component: service
       tier: public
@@ -24,7 +24,7 @@ services:
             - image: ghcr.io/example/predictor:1.0.0
 
 clusterDomainClaims:
-  - name: models.internal.example.com
+  models.internal.example.com:
     labels:
       component: cluster-domain-claim
     annotations:

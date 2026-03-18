@@ -38,55 +38,55 @@
     },
     "resourceItemContract": {
       "$ref": "#/definitions/documentedResourceItem",
-      "description": "Documentation-only contract for one list item. Ignored by templates."
+      "description": "Documentation-only contract for one resource map entry. The map key becomes the resource name. Ignored by templates."
     },
     "certificates": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Certificate resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Certificate resources keyed by resource name."
     },
     "clusterDomainClaims": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of ClusterDomainClaim resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ClusterDomainClaim resources keyed by resource name."
     },
     "configurations": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Configuration resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Configuration resources keyed by resource name."
     },
     "domainMappings": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of DomainMapping resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of DomainMapping resources keyed by resource name."
     },
     "images": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Image resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Image resources keyed by resource name."
     },
     "ingresses": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Ingress resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Ingress resources keyed by resource name."
     },
     "metrics": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Metric resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Metric resources keyed by resource name."
     },
     "podAutoscalers": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of PodAutoscaler resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of PodAutoscaler resources keyed by resource name."
     },
     "revisions": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Revision resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Revision resources keyed by resource name."
     },
     "routes": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Route resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Route resources keyed by resource name."
     },
     "serverlessServices": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of ServerlessService resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ServerlessService resources keyed by resource name."
     },
     "services": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of Service resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Service resources keyed by resource name."
     }
   },
   "definitions": {
@@ -112,12 +112,7 @@
     "resourceItem": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name"],
       "properties": {
-        "name": {
-          "$ref": "#/definitions/nonEmptyString",
-          "description": "Resource name."
-        },
         "namespace": {
           "$ref": "#/definitions/nonEmptyString",
           "description": "Namespace for namespaced resources. Ignored for cluster-scoped kinds."
@@ -147,12 +142,7 @@
     "documentedResourceItem": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name"],
       "properties": {
-        "name": {
-          "$ref": "#/definitions/nonEmptyString",
-          "description": "Example resource name."
-        },
         "namespace": {
           "$ref": "#/definitions/nonEmptyString",
           "description": "Example namespace for namespaced resources."
@@ -179,10 +169,13 @@
         }
       }
     },
-    "resourceList": {
-      "type": "array",
-      "default": [],
-      "items": {
+    "resourceMap": {
+      "type": "object",
+      "default": {},
+      "propertyNames": {
+        "$ref": "#/definitions/nonEmptyString"
+      },
+      "additionalProperties": {
         "$ref": "#/definitions/resourceItem"
       }
     }

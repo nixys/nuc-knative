@@ -40,7 +40,7 @@ helm install nuc-knative . \
 
 ## Values Model
 
-Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
+Each top-level map in [values.yaml](values.yaml) maps to one resource kind:
 
 - `certificates`
 - `clusterDomainClaims`
@@ -55,11 +55,10 @@ Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
 - `serverlessServices`
 - `services`
 
-Each list item uses the same contract:
+Each map entry uses the same contract. The entry key becomes the resource name:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `name` | yes | Resource name. |
 | `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped resources. |
 | `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
 | `annotations` | no | Annotations merged on top of `commonAnnotations`. |

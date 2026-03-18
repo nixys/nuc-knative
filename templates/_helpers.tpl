@@ -17,13 +17,14 @@ helm.sh/chart: {{ include "nuc-knative.chart" . }}
 {{- $root := .root -}}
 {{- $item := .item -}}
 {{- $resourceKey := .resourceKey -}}
+{{- $resourceName := .resourceName -}}
 {{- $defaultLabels := include "nuc-knative.labels" $root | fromYaml -}}
 {{- $labels := mustMergeOverwrite (dict) $defaultLabels ($root.Values.commonLabels | default dict) ($item.labels | default dict) -}}
 {{- $annotations := mustMergeOverwrite (dict) ($root.Values.commonAnnotations | default dict) ($item.annotations | default dict) -}}
 apiVersion: {{ default .defaultApiVersion $item.apiVersion }}
 kind: {{ .kind }}
 metadata:
-  name: {{ required (printf "%s.name is required" $resourceKey) $item.name }}
+  name: {{ required (printf "%s key is required" $resourceKey) $resourceName }}
   {{- if .namespaced }}
   namespace: {{ default $root.Release.Namespace $item.namespace }}
   {{- end }}

@@ -5,7 +5,7 @@ commonAnnotations:
   test-suite: e2e
 
 certificates:
-  - name: e2e-cert
+  e2e-cert:
     spec:
       dnsNames:
         - webhook.nuc-knative-e2e.svc
@@ -13,12 +13,12 @@ certificates:
       domain: webhook.nuc-knative-e2e.svc.cluster.local
 
 clusterDomainClaims:
-  - name: e2e.models.example.com
+  e2e.models.example.com:
     spec:
       namespace: nuc-knative-e2e
 
 configurations:
-  - name: e2e-config
+  e2e-config:
     spec:
       template:
         spec:
@@ -26,7 +26,7 @@ configurations:
             - image: ghcr.io/example/predictor:e2e
 
 domainMappings:
-  - name: e2e.models.example.com
+  e2e.models.example.com:
     spec:
       ref:
         apiVersion: serving.knative.dev/v1
@@ -34,24 +34,24 @@ domainMappings:
         name: e2e-service
 
 images:
-  - name: e2e-image
+  e2e-image:
     spec:
       image: ghcr.io/example/predictor:e2e
 
 ingresses:
-  - name: e2e-ingress
+  e2e-ingress:
     spec:
       rules:
         - hosts:
             - e2e.models.example.com
 
 metrics:
-  - name: e2e-metric
+  e2e-metric:
     spec:
       stableWindow: 60s
 
 podAutoscalers:
-  - name: e2e-pa
+  e2e-pa:
     spec:
       protocolType: http1
       scaleTargetRef:
@@ -60,13 +60,13 @@ podAutoscalers:
         name: e2e-deployment
 
 revisions:
-  - name: e2e-revision
+  e2e-revision:
     spec:
       containers:
         - image: ghcr.io/example/predictor:e2e
 
 routes:
-  - name: e2e-route
+  e2e-route:
     spec:
       traffic:
         - percent: 100
@@ -74,7 +74,7 @@ routes:
           latestRevision: false
 
 serverlessServices:
-  - name: e2e-sks
+  e2e-sks:
     spec:
       mode: Serve
       objectRef:
@@ -83,7 +83,7 @@ serverlessServices:
         name: e2e-deployment
 
 services:
-  - name: e2e-service
+  e2e-service:
     spec:
       template:
         spec:
