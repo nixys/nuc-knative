@@ -42,6 +42,27 @@ apiVersions:
 # - spec: arbitrary resource spec
 # - status: optional raw status block for fixtures and synthetic manifests
 
+# -- Documentation-only contract for a single resource item. Templates ignore this block; it exists so helm-docs can describe nested fields such as `name`, `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`.
+resourceItemContract:
+  # -- Example resource name. Real items must provide a unique value.
+  name: example-name
+  # -- Example namespace for namespaced resources. Cluster-scoped kinds ignore this field.
+  namespace: example-namespace
+  labels:
+    # -- Example label value. Real items may use arbitrary keys and values.
+    exampleKey: example-value
+  annotations:
+    # -- Example annotation value. Real items may use arbitrary keys and values.
+    exampleKey: example-value
+  # -- Example per-resource apiVersion override.
+  apiVersion: example.group/v1alpha1
+  spec:
+    # -- Example spec field. Replace with the real CRD spec payload for the selected kind.
+    exampleField: example-value
+  status:
+    # -- Example status field. Usually only useful for fixtures and synthetic manifests.
+    exampleField: example-value
+
 # -- Certificate resources to render.
 certificates: []
 

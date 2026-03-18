@@ -74,6 +74,8 @@ Global controls:
 - `commonAnnotations`
 - `apiVersions.*`
 
+Nested contract fields are exposed in the generated Helm values table under `resourceItemContract.*`. This block is documentation-only and is ignored by templates.
+
 ## Helm Values
 
 {{ template "chart.valuesTable" . }}

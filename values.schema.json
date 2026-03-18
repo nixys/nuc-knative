@@ -36,6 +36,10 @@
         "service": { "$ref": "#/definitions/nonEmptyString" }
       }
     },
+    "resourceItemContract": {
+      "$ref": "#/definitions/documentedResourceItem",
+      "description": "Documentation-only contract for one list item. Ignored by templates."
+    },
     "certificates": {
       "$ref": "#/definitions/resourceList",
       "description": "List of Certificate resources."
@@ -137,6 +141,41 @@
         "status": {
           "$ref": "#/definitions/freeFormObject",
           "description": "Optional resource status rendered as-is."
+        }
+      }
+    },
+    "documentedResourceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Example resource name."
+        },
+        "namespace": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Example namespace for namespaced resources."
+        },
+        "labels": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Example resource-specific labels."
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Example resource-specific annotations."
+        },
+        "apiVersion": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Example per-resource API version override."
+        },
+        "spec": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Example spec payload rendered as-is."
+        },
+        "status": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Example status payload rendered as-is."
         }
       }
     },

@@ -74,6 +74,8 @@ Global controls:
 - `commonAnnotations`
 - `apiVersions.*`
 
+Nested contract fields are exposed in the generated Helm values table under `resourceItemContract.*`. This block is documentation-only and is ignored by templates.
+
 ## Helm Values
 
 | Key | Type | Default | Description |
@@ -101,6 +103,14 @@ Global controls:
 | metrics | list | `[]` | Metric resources to render. |
 | nameOverride | string | `""` | Override the default chart label name if needed. |
 | podAutoscalers | list | `[]` | PodAutoscaler resources to render. |
+| resourceItemContract | object | `{"annotations":{"exampleKey":"example-value"},"apiVersion":"example.group/v1alpha1","labels":{"exampleKey":"example-value"},"name":"example-name","namespace":"example-namespace","spec":{"exampleField":"example-value"},"status":{"exampleField":"example-value"}}` | Documentation-only contract for a single resource item. Templates ignore this block; it exists so helm-docs can describe nested fields such as `name`, `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`. |
+| resourceItemContract.annotations.exampleKey | string | `"example-value"` | Example annotation value. Real items may use arbitrary keys and values. |
+| resourceItemContract.apiVersion | string | `"example.group/v1alpha1"` | Example per-resource apiVersion override. |
+| resourceItemContract.labels.exampleKey | string | `"example-value"` | Example label value. Real items may use arbitrary keys and values. |
+| resourceItemContract.name | string | `"example-name"` | Example resource name. Real items must provide a unique value. |
+| resourceItemContract.namespace | string | `"example-namespace"` | Example namespace for namespaced resources. Cluster-scoped kinds ignore this field. |
+| resourceItemContract.spec.exampleField | string | `"example-value"` | Example spec field. Replace with the real CRD spec payload for the selected kind. |
+| resourceItemContract.status.exampleField | string | `"example-value"` | Example status field. Usually only useful for fixtures and synthetic manifests. |
 | revisions | list | `[]` | Revision resources to render. |
 | routes | list | `[]` | Route resources to render. |
 | serverlessServices | list | `[]` | ServerlessService resources to render. |
