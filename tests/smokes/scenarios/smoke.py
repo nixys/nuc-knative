@@ -6,6 +6,10 @@ from typing import Callable
 
 from tests.smokes.steps import chart, helm, kubeconform, render, system
 
+SCENARIO_ALIASES = {
+    "schema-invalid-missing-name": "schema-invalid-array-contract",
+}
+
 
 @dataclass
 class SmokeContext:
@@ -221,7 +225,11 @@ def run_smoke_suite(args) -> int:
     if "all" in requested:
         selected = [name for name, _ in SCENARIOS]
     else:
-        selected = requested
+        selected = []
+        for name in requested:
+            normalized = SCENARIO_ALIASES.get(name, name)
+            if normalized not in selected:
+                selected.append(normalized)
 
     repo_root = Path(args.chart_dir).resolve()
     workdir, chart_dir = chart.stage_chart(repo_root, args.workdir)
