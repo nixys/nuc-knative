@@ -1,0 +1,91 @@
+commonLabels:
+  test-suite: e2e
+
+commonAnnotations:
+  test-suite: e2e
+
+certificates:
+  e2e-cert:
+    spec:
+      dnsNames:
+        - webhook.nuc-knative-e2e.svc
+      secretName: e2e-cert
+      domain: webhook.nuc-knative-e2e.svc.cluster.local
+
+clusterDomainClaims:
+  e2e.models.example.com:
+    spec:
+      namespace: nuc-knative-e2e
+
+configurations:
+  e2e-config:
+    spec:
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:e2e
+
+domainMappings:
+  e2e.models.example.com:
+    spec:
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: e2e-service
+
+images:
+  e2e-image:
+    spec:
+      image: ghcr.io/example/predictor:e2e
+
+ingresses:
+  e2e-ingress:
+    spec:
+      rules:
+        - hosts:
+            - e2e.models.example.com
+
+metrics:
+  e2e-metric:
+    spec:
+      stableWindow: 60s
+
+podAutoscalers:
+  e2e-pa:
+    spec:
+      protocolType: http1
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: e2e-deployment
+
+revisions:
+  e2e-revision:
+    spec:
+      containers:
+        - image: ghcr.io/example/predictor:e2e
+
+routes:
+  e2e-route:
+    spec:
+      traffic:
+        - percent: 100
+          revisionName: e2e-revision
+          latestRevision: false
+
+serverlessServices:
+  e2e-sks:
+    spec:
+      mode: Serve
+      objectRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: e2e-deployment
+
+services:
+  e2e-service:
+    spec:
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:e2e

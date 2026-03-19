@@ -1,0 +1,33 @@
+nameOverride: knative-platform
+
+commonLabels:
+  platform: knative
+
+commonAnnotations:
+  team: platform
+
+apiVersions:
+  service: example.net/v1alpha1
+  clusterDomainClaim: networking.internal.knative.dev/v1beta1
+
+services:
+  merged-service:
+    labels:
+      component: service
+      tier: public
+    annotations:
+      note: public-entrypoint
+    spec:
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:1.0.0
+
+clusterDomainClaims:
+  models.internal.example.com:
+    labels:
+      component: cluster-domain-claim
+    annotations:
+      note: cluster-scope
+    spec:
+      namespace: smoke-namespace

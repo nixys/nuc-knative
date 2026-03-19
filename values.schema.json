@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "nuc-knative values",
+  "description": "Schema for nuc-knative Helm chart values.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name used in generated labels."
+    },
+    "commonLabels": {
+      "$ref": "#/definitions/stringMap",
+      "description": "Labels merged into every rendered resource."
+    },
+    "commonAnnotations": {
+      "$ref": "#/definitions/stringMap",
+      "description": "Annotations merged into every rendered resource."
+    },
+    "apiVersions": {
+      "type": "object",
+      "description": "Default API version overrides per supported Knative kind.",
+      "additionalProperties": false,
+      "properties": {
+        "certificate": { "$ref": "#/definitions/nonEmptyString" },
+        "clusterDomainClaim": { "$ref": "#/definitions/nonEmptyString" },
+        "configuration": { "$ref": "#/definitions/nonEmptyString" },
+        "domainMapping": { "$ref": "#/definitions/nonEmptyString" },
+        "image": { "$ref": "#/definitions/nonEmptyString" },
+        "ingress": { "$ref": "#/definitions/nonEmptyString" },
+        "metric": { "$ref": "#/definitions/nonEmptyString" },
+        "podAutoscaler": { "$ref": "#/definitions/nonEmptyString" },
+        "revision": { "$ref": "#/definitions/nonEmptyString" },
+        "route": { "$ref": "#/definitions/nonEmptyString" },
+        "serverlessService": { "$ref": "#/definitions/nonEmptyString" },
+        "service": { "$ref": "#/definitions/nonEmptyString" }
+      }
+    },
+    "resourceItemContract": {
+      "$ref": "#/definitions/documentedResourceItem",
+      "description": "Documentation-only contract for one resource map entry. The map key becomes the resource name. Ignored by templates."
+    },
+    "certificates": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Certificate resources keyed by resource name."
+    },
+    "clusterDomainClaims": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ClusterDomainClaim resources keyed by resource name."
+    },
+    "configurations": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Configuration resources keyed by resource name."
+    },
+    "domainMappings": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of DomainMapping resources keyed by resource name."
+    },
+    "images": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Image resources keyed by resource name."
+    },
+    "ingresses": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Ingress resources keyed by resource name."
+    },
+    "metrics": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Metric resources keyed by resource name."
+    },
+    "podAutoscalers": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of PodAutoscaler resources keyed by resource name."
+    },
+    "revisions": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Revision resources keyed by resource name."
+    },
+    "routes": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Route resources keyed by resource name."
+    },
+    "serverlessServices": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ServerlessService resources keyed by resource name."
+    },
+    "services": {
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of Service resources keyed by resource name."
+    }
+  },
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringMap": {
+      "type": "object",
+      "default": {},
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "freeFormObject": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "resourceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Namespace for namespaced resources. Ignored for cluster-scoped kinds."
+        },
+        "labels": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Resource-specific labels."
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Resource-specific annotations."
+        },
+        "apiVersion": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Per-resource API version override."
+        },
+        "spec": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Resource spec rendered as-is."
+        },
+        "status": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Optional resource status rendered as-is."
+        }
+      }
+    },
+    "documentedResourceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "namespace": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Example namespace for namespaced resources."
+        },
+        "labels": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Example resource-specific labels."
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Example resource-specific annotations."
+        },
+        "apiVersion": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Example per-resource API version override."
+        },
+        "spec": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Example spec payload rendered as-is."
+        },
+        "status": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Example status payload rendered as-is."
+        }
+      }
+    },
+    "resourceMap": {
+      "type": "object",
+      "default": {},
+      "propertyNames": {
+        "$ref": "#/definitions/nonEmptyString"
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/resourceItem"
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{{- range $name, $item := .Values.ingresses }}
+---
+{{ include "nuc-knative.renderResource" (dict
+  "root" $
+  "item" $item
+  "resourceName" $name
+  "kind" "Ingress"
+  "defaultApiVersion" $.Values.apiVersions.ingress
+  "resourceKey" "ingresses"
+  "namespaced" true
+) }}
+{{- end }}

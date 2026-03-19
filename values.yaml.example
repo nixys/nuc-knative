@@ -1,0 +1,203 @@
+# Example values for all supported Knative resources in this chart.
+# Render with:
+#   helm template nuc-knative . -f values.yaml.example
+
+nameOverride: ""
+
+commonLabels:
+  platform: kserve
+commonAnnotations:
+  team: serving
+
+apiVersions:
+  certificate: networking.internal.knative.dev/v1alpha1
+  clusterDomainClaim: networking.internal.knative.dev/v1alpha1
+  configuration: serving.knative.dev/v1
+  domainMapping: serving.knative.dev/v1beta1
+  image: caching.internal.knative.dev/v1alpha1
+  ingress: networking.internal.knative.dev/v1alpha1
+  metric: autoscaling.internal.knative.dev/v1alpha1
+  podAutoscaler: autoscaling.internal.knative.dev/v1alpha1
+  revision: serving.knative.dev/v1
+  route: serving.knative.dev/v1
+  serverlessService: networking.internal.knative.dev/v1alpha1
+  service: serving.knative.dev/v1
+
+certificates:
+  predictor-cert:
+    namespace: kserve-system
+    labels:
+      component: certificate
+    annotations:
+      note: webhook
+    spec:
+      dnsNames:
+        - webhook.kserve-system.svc
+      secretName: predictor-webhook-cert
+      domain: webhook.kserve-system.svc.cluster.local
+
+clusterDomainClaims:
+  models.example.com:
+    labels:
+      component: domain-claim
+    annotations:
+      note: tenant-a
+    spec:
+      namespace: tenant-a
+
+configurations:
+  sklearn-config:
+    namespace: kserve-user
+    labels:
+      component: configuration
+    annotations:
+      note: predictor
+    spec:
+      template:
+        metadata:
+          annotations:
+            autoscaling.knative.dev/minScale: "1"
+        spec:
+          containerConcurrency: 5
+          timeoutSeconds: 300
+          containers:
+            - image: ghcr.io/kserve/sklearnserver:latest
+              ports:
+                - containerPort: 8080
+
+domainMappings:
+  sklearn.models.example.com:
+    namespace: kserve-user
+    labels:
+      component: domain-mapping
+    annotations:
+      note: external
+    spec:
+      ref:
+        apiVersion: serving.knative.dev/v1
+        kind: Service
+        name: sklearn-svc
+      tls:
+        secretName: predictor-webhook-cert
+
+images:
+  sklearn-image-cache:
+    namespace: kserve-user
+    labels:
+      component: image-cache
+    annotations:
+      note: warm
+    spec:
+      image: ghcr.io/example/sklearnserver:latest
+
+ingresses:
+  sklearn-ingress:
+    namespace: kserve-user
+    labels:
+      component: ingress
+    annotations:
+      note: public
+    spec:
+      rules:
+        - hosts:
+            - sklearn.models.example.com
+          http:
+            paths:
+              - path: /
+                splits:
+                  - serviceName: activator-service
+                    serviceNamespace: knative-serving
+                    percent: 100
+
+metrics:
+  sklearn-metric:
+    namespace: kserve-user
+    labels:
+      component: metric
+    annotations:
+      note: autoscaling
+    spec:
+      stableWindow: 60s
+      panicWindow: 10s
+      scrapeTarget: queue-proxy
+
+podAutoscalers:
+  sklearn-pa:
+    namespace: kserve-user
+    labels:
+      component: pod-autoscaler
+    annotations:
+      note: predictor
+    spec:
+      protocolType: http1
+      scaleTargetRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: sklearn-deployment
+      containerConcurrency: 5
+
+revisions:
+  sklearn-config-00001:
+    namespace: kserve-user
+    labels:
+      component: revision
+    annotations:
+      note: pinned
+    spec:
+      timeoutSeconds: 300
+      containerConcurrency: 5
+      containers:
+        - image: ghcr.io/kserve/sklearnserver:latest
+          env:
+            - name: STORAGE_URI
+              value: s3://models/sklearn
+
+routes:
+  sklearn-route:
+    namespace: kserve-user
+    labels:
+      component: route
+    annotations:
+      note: traffic
+    spec:
+      traffic:
+        - percent: 100
+          revisionName: sklearn-config-00001
+          latestRevision: false
+
+serverlessServices:
+  sklearn-sks:
+    namespace: kserve-user
+    labels:
+      component: sks
+    annotations:
+      note: private
+    spec:
+      mode: Serve
+      numActivators: 2
+      objectRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: sklearn-deployment
+      protocolType: HTTP1
+
+services:
+  sklearn-svc:
+    namespace: kserve-user
+    labels:
+      component: service
+    annotations:
+      note: public-entrypoint
+    spec:
+      template:
+        metadata:
+          annotations:
+            autoscaling.knative.dev/minScale: "1"
+        spec:
+          containerConcurrency: 5
+          timeoutSeconds: 300
+          containers:
+            - image: ghcr.io/kserve/sklearnserver:latest
+              env:
+                - name: MODEL_NAME
+                  value: sklearn

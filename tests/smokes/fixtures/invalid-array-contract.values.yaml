@@ -1,0 +1,6 @@
+services:
+  - spec:
+      template:
+        spec:
+          containers:
+            - image: ghcr.io/example/predictor:latest

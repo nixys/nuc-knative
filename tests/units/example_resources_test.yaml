@@ -1,0 +1,177 @@
+suite: example resources
+templates:
+  - templates/certificate.yaml
+  - templates/clusterdomainclaim.yaml
+  - templates/configuration.yaml
+  - templates/domainmapping.yaml
+  - templates/image.yaml
+  - templates/ingress.yaml
+  - templates/metric.yaml
+  - templates/podautoscaler.yaml
+  - templates/revision.yaml
+  - templates/route.yaml
+  - templates/serverlessservice.yaml
+  - templates/service.yaml
+release:
+  name: unit-test
+  namespace: unit-namespace
+
+tests:
+  - it: renders one document per template from the example values
+    values:
+      - ../../values.yaml.example
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: templates/certificate.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/clusterdomainclaim.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/configuration.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/domainmapping.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/image.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/ingress.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/metric.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/podautoscaler.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/revision.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/route.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/serverlessservice.yaml
+      - hasDocuments:
+          count: 1
+        template: templates/service.yaml
+
+  - it: renders the expected example manifests
+    values:
+      - ../../values.yaml.example
+    asserts:
+      - containsDocument:
+          kind: Certificate
+          apiVersion: networking.internal.knative.dev/v1alpha1
+          name: predictor-cert
+          namespace: kserve-system
+          any: true
+        template: templates/certificate.yaml
+      - containsDocument:
+          kind: ClusterDomainClaim
+          apiVersion: networking.internal.knative.dev/v1alpha1
+          name: models.example.com
+          any: true
+        template: templates/clusterdomainclaim.yaml
+      - containsDocument:
+          kind: Configuration
+          apiVersion: serving.knative.dev/v1
+          name: sklearn-config
+          namespace: kserve-user
+          any: true
+        template: templates/configuration.yaml
+      - containsDocument:
+          kind: DomainMapping
+          apiVersion: serving.knative.dev/v1beta1
+          name: sklearn.models.example.com
+          namespace: kserve-user
+          any: true
+        template: templates/domainmapping.yaml
+      - containsDocument:
+          kind: Image
+          apiVersion: caching.internal.knative.dev/v1alpha1
+          name: sklearn-image-cache
+          namespace: kserve-user
+          any: true
+        template: templates/image.yaml
+      - containsDocument:
+          kind: Ingress
+          apiVersion: networking.internal.knative.dev/v1alpha1
+          name: sklearn-ingress
+          namespace: kserve-user
+          any: true
+        template: templates/ingress.yaml
+      - containsDocument:
+          kind: Metric
+          apiVersion: autoscaling.internal.knative.dev/v1alpha1
+          name: sklearn-metric
+          namespace: kserve-user
+          any: true
+        template: templates/metric.yaml
+      - containsDocument:
+          kind: PodAutoscaler
+          apiVersion: autoscaling.internal.knative.dev/v1alpha1
+          name: sklearn-pa
+          namespace: kserve-user
+          any: true
+        template: templates/podautoscaler.yaml
+      - containsDocument:
+          kind: Revision
+          apiVersion: serving.knative.dev/v1
+          name: sklearn-config-00001
+          namespace: kserve-user
+          any: true
+        template: templates/revision.yaml
+      - containsDocument:
+          kind: Route
+          apiVersion: serving.knative.dev/v1
+          name: sklearn-route
+          namespace: kserve-user
+          any: true
+        template: templates/route.yaml
+      - containsDocument:
+          kind: ServerlessService
+          apiVersion: networking.internal.knative.dev/v1alpha1
+          name: sklearn-sks
+          namespace: kserve-user
+          any: true
+        template: templates/serverlessservice.yaml
+      - containsDocument:
+          kind: Service
+          apiVersion: serving.knative.dev/v1
+          name: sklearn-svc
+          namespace: kserve-user
+          any: true
+        template: templates/service.yaml
+
+  - it: renders the Service example
+    values:
+      - ../../values.yaml.example
+    template: templates/service.yaml
+    documentSelector:
+      path: metadata.name
+      value: sklearn-svc
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: MODEL_NAME
+
+  - it: renders the cluster-scoped ClusterDomainClaim example
+    values:
+      - ../../values.yaml.example
+    template: templates/clusterdomainclaim.yaml
+    documentSelector:
+      path: metadata.name
+      value: models.example.com
+    asserts:
+      - isKind:
+          of: ClusterDomainClaim
+      - notExists:
+          path: metadata.namespace
+      - equal:
+          path: spec.namespace
+          value: tenant-a

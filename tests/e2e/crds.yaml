@@ -1,0 +1,246 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: certificates.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  scope: Namespaced
+  names:
+    plural: certificates
+    singular: certificate
+    kind: Certificate
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: clusterdomainclaims.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  scope: Cluster
+  names:
+    plural: clusterdomainclaims
+    singular: clusterdomainclaim
+    kind: ClusterDomainClaim
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+    - name: v1beta1
+      served: true
+      storage: false
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: configurations.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  scope: Namespaced
+  names:
+    plural: configurations
+    singular: configuration
+    kind: Configuration
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: domainmappings.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  scope: Namespaced
+  names:
+    plural: domainmappings
+    singular: domainmapping
+    kind: DomainMapping
+  versions:
+    - name: v1beta1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: images.caching.internal.knative.dev
+spec:
+  group: caching.internal.knative.dev
+  scope: Namespaced
+  names:
+    plural: images
+    singular: image
+    kind: Image
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ingresses.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  scope: Namespaced
+  names:
+    plural: ingresses
+    singular: ingress
+    kind: Ingress
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: metrics.autoscaling.internal.knative.dev
+spec:
+  group: autoscaling.internal.knative.dev
+  scope: Namespaced
+  names:
+    plural: metrics
+    singular: metric
+    kind: Metric
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: podautoscalers.autoscaling.internal.knative.dev
+spec:
+  group: autoscaling.internal.knative.dev
+  scope: Namespaced
+  names:
+    plural: podautoscalers
+    singular: podautoscaler
+    kind: PodAutoscaler
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: revisions.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  scope: Namespaced
+  names:
+    plural: revisions
+    singular: revision
+    kind: Revision
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: routes.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  scope: Namespaced
+  names:
+    plural: routes
+    singular: route
+    kind: Route
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: serverlessservices.networking.internal.knative.dev
+spec:
+  group: networking.internal.knative.dev
+  scope: Namespaced
+  names:
+    plural: serverlessservices
+    singular: serverlessservice
+    kind: ServerlessService
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: services.serving.knative.dev
+spec:
+  group: serving.knative.dev
+  scope: Namespaced
+  names:
+    plural: services
+    singular: service
+    kind: Service
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          x-kubernetes-preserve-unknown-fields: true

@@ -1,0 +1,98 @@
+# -- Override the default chart label name if needed.
+nameOverride: ""
+
+# -- Extra labels applied to every rendered resource.
+commonLabels: {}
+# -- Extra annotations applied to every rendered resource.
+commonAnnotations: {}
+
+# Default apiVersions for the supported Knative resources.
+apiVersions:
+  # -- Default apiVersion for Certificate resources.
+  certificate: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for ClusterDomainClaim resources.
+  clusterDomainClaim: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Configuration resources.
+  configuration: serving.knative.dev/v1
+  # -- Default apiVersion for DomainMapping resources.
+  domainMapping: serving.knative.dev/v1beta1
+  # -- Default apiVersion for Image resources.
+  image: caching.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Ingress resources.
+  ingress: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Metric resources.
+  metric: autoscaling.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for PodAutoscaler resources.
+  podAutoscaler: autoscaling.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Revision resources.
+  revision: serving.knative.dev/v1
+  # -- Default apiVersion for Route resources.
+  route: serving.knative.dev/v1
+  # -- Default apiVersion for ServerlessService resources.
+  serverlessService: networking.internal.knative.dev/v1alpha1
+  # -- Default apiVersion for Service resources.
+  service: serving.knative.dev/v1
+
+# Each resource map entry supports:
+# - map key: required resource name
+# - namespace: optional for namespaced resources, defaults to the release namespace
+# - labels: optional
+# - annotations: optional
+# - apiVersion: optional override for a single resource
+# - spec: arbitrary resource spec
+# - status: optional raw status block for fixtures and synthetic manifests
+
+# -- Documentation-only contract for a single resource map entry. The map key becomes the resource name. Templates ignore this block; it exists so helm-docs can describe nested fields such as `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`.
+resourceItemContract:
+  # -- Example namespace for namespaced resources. Cluster-scoped kinds ignore this field.
+  namespace: example-namespace
+  labels:
+    # -- Example label value. Real items may use arbitrary keys and values.
+    exampleKey: example-value
+  annotations:
+    # -- Example annotation value. Real items may use arbitrary keys and values.
+    exampleKey: example-value
+  # -- Example per-resource apiVersion override.
+  apiVersion: example.group/v1alpha1
+  spec:
+    # -- Example spec field. Replace with the real CRD spec payload for the selected kind.
+    exampleField: example-value
+  status:
+    # -- Example status field. Usually only useful for fixtures and synthetic manifests.
+    exampleField: example-value
+
+# -- Certificate resources keyed by resource name.
+certificates: {}
+
+# -- ClusterDomainClaim resources keyed by resource name.
+clusterDomainClaims: {}
+
+# -- Configuration resources keyed by resource name.
+configurations: {}
+
+# -- DomainMapping resources keyed by resource name.
+domainMappings: {}
+
+# -- Image resources keyed by resource name.
+images: {}
+
+# -- Ingress resources keyed by resource name.
+ingresses: {}
+
+# -- Metric resources keyed by resource name.
+metrics: {}
+
+# -- PodAutoscaler resources keyed by resource name.
+podAutoscalers: {}
+
+# -- Revision resources keyed by resource name.
+revisions: {}
+
+# -- Route resources keyed by resource name.
+routes: {}
+
+# -- ServerlessService resources keyed by resource name.
+serverlessServices: {}
+
+# -- Service resources keyed by resource name.
+services: {}

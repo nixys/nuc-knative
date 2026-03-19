@@ -1,0 +1,89 @@
+suite: rendering contract
+templates:
+  - templates/service.yaml
+  - templates/clusterdomainclaim.yaml
+release:
+  name: unit-test
+  namespace: unit-namespace
+
+tests:
+  - it: renders no Service documents by default
+    template: templates/service.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders no ClusterDomainClaim documents by default
+    template: templates/clusterdomainclaim.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: applies helper defaults and overrides for namespaced resources
+    values:
+      - values/rendering_contract.values.yaml
+    template: templates/service.yaml
+    documentSelector:
+      path: metadata.name
+      value: merged-service
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: apiVersion
+          value: example.net/v1alpha1
+      - equal:
+          path: metadata.namespace
+          value: unit-namespace
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: knative-platform
+      - equal:
+          path: metadata.labels.platform
+          value: knative
+      - equal:
+          path: metadata.labels.component
+          value: service
+      - equal:
+          path: metadata.labels.tier
+          value: public
+      - equal:
+          path: metadata.annotations.team
+          value: platform
+      - equal:
+          path: metadata.annotations.note
+          value: public-entrypoint
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/example/predictor:1.0.0
+
+  - it: renders cluster-scoped resources without namespace and with configured apiVersion
+    values:
+      - values/rendering_contract.values.yaml
+    template: templates/clusterdomainclaim.yaml
+    documentSelector:
+      path: metadata.name
+      value: models.internal.example.com
+    asserts:
+      - isKind:
+          of: ClusterDomainClaim
+      - equal:
+          path: apiVersion
+          value: networking.internal.knative.dev/v1beta1
+      - notExists:
+          path: metadata.namespace
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: knative-platform
+      - equal:
+          path: metadata.labels.component
+          value: cluster-domain-claim
+      - equal:
+          path: metadata.annotations.team
+          value: platform
+      - equal:
+          path: metadata.annotations.note
+          value: cluster-scope
+      - equal:
+          path: spec.namespace
+          value: unit-namespace
