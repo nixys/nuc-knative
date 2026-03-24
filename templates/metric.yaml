@@ -1,12 +1,1 @@
-{{- range $name, $item := .Values.metrics }}
----
-{{ include "nuc-knative.renderResource" (dict
-  "root" $
-  "item" $item
-  "resourceName" $name
-  "kind" "Metric"
-  "defaultApiVersion" $.Values.apiVersions.metric
-  "resourceKey" "metrics"
-  "namespaced" true
-) }}
-{{- end }}
+{{ include "nuc-knative.renderResourceCollection" (dict "root" $ "items" .Values.metrics "resourceKey" "metrics" "defaultApiVersion" $.Values.apiVersions.metric "kind" "Metric" "namespaced" true) }}

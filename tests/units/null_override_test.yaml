@@ -1,0 +1,31 @@
+suite: null override contract
+templates:
+  - templates/service.yaml
+  - templates/clusterdomainclaim.yaml
+release:
+  name: unit-test
+  namespace: unit-namespace
+
+tests:
+  - it: skips a default Service when a later values file overrides it to null
+    values:
+      - ../../values.yaml.example
+      - values/null_override.values.yaml
+    template: templates/service.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: keeps unrelated resources when one default entry is overridden to null
+    values:
+      - ../../values.yaml.example
+      - values/null_override.values.yaml
+    template: templates/clusterdomainclaim.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - containsDocument:
+          kind: ClusterDomainClaim
+          apiVersion: networking.internal.knative.dev/v1alpha1
+          name: models.example.com
+          any: true

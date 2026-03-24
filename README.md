@@ -66,12 +66,16 @@ Each map entry uses the same contract. The entry key becomes the resource name:
 | `spec` | no | Raw resource spec rendered as-is. |
 | `status` | no | Optional raw status block for fixtures and synthetic manifests. |
 
+In a higher-precedence values file, set a map entry to `null` to suppress a default resource from a lower-precedence values file.
+
 Global controls:
 
+- `enabled`
 - `nameOverride`
 - `commonLabels`
 - `commonAnnotations`
 - `apiVersions.*`
+- `global` (accepted for umbrella-chart compatibility and ignored by templates)
 
 Nested contract fields are exposed in the generated Helm values table under `resourceItemContract.*`. This block is documentation-only and is ignored by templates.
 
@@ -97,6 +101,8 @@ Nested contract fields are exposed in the generated Helm values table under `res
 | commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
 | configurations | object | `{}` | Configuration resources keyed by resource name. |
 | domainMappings | object | `{}` | DomainMapping resources keyed by resource name. |
+| enabled | bool | `true` | Enable nuc-knative chart rendering. |
+| global | object | `{}` | Compatibility values inherited from umbrella charts. Accepted but ignored by this chart. |
 | images | object | `{}` | Image resources keyed by resource name. |
 | ingresses | object | `{}` | Ingress resources keyed by resource name. |
 | metrics | object | `{}` | Metric resources keyed by resource name. |

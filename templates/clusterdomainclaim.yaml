@@ -1,12 +1,1 @@
-{{- range $name, $item := .Values.clusterDomainClaims }}
----
-{{ include "nuc-knative.renderResource" (dict
-  "root" $
-  "item" $item
-  "resourceName" $name
-  "kind" "ClusterDomainClaim"
-  "defaultApiVersion" $.Values.apiVersions.clusterDomainClaim
-  "resourceKey" "clusterDomainClaims"
-  "namespaced" false
-) }}
-{{- end }}
+{{ include "nuc-knative.renderResourceCollection" (dict "root" $ "items" .Values.clusterDomainClaims "resourceKey" "clusterDomainClaims" "defaultApiVersion" $.Values.apiVersions.clusterDomainClaim "kind" "ClusterDomainClaim" "namespaced" false) }}

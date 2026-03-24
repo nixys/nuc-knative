@@ -1,6 +1,9 @@
 # -- Enable nuc-knative chart rendering.
 enabled: true
 
+# -- Compatibility values inherited from umbrella charts. Accepted but ignored by this chart.
+global: {}
+
 # -- Override the default chart label name if needed.
 nameOverride: ""
 
@@ -44,6 +47,7 @@ apiVersions:
 # - apiVersion: optional override for a single resource
 # - spec: arbitrary resource spec
 # - status: optional raw status block for fixtures and synthetic manifests
+# - set an entry to null in a higher-precedence values file to suppress a lower-precedence default resource
 
 # -- Documentation-only contract for a single resource map entry. The map key becomes the resource name. Templates ignore this block; it exists so helm-docs can describe nested fields such as `namespace`, `labels`, `annotations`, `apiVersion`, `spec`, and `status`.
 resourceItemContract:

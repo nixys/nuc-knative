@@ -43,3 +43,19 @@ status:
 {{ toYaml . | nindent 2 }}
 {{- end }}
 {{- end -}}
+
+{{- define "nuc-knative.renderResourceCollection" -}}
+{{- $root := .root -}}
+{{- $items := .items | default dict -}}
+{{- $resourceKey := .resourceKey -}}
+{{- $defaultApiVersion := .defaultApiVersion -}}
+{{- $kind := .kind -}}
+{{- $namespaced := .namespaced -}}
+{{- $documents := list -}}
+{{- range $resourceName, $item := $items -}}
+{{- if kindIs "map" $item -}}
+{{- $documents = append $documents (include "nuc-knative.renderResource" (dict "root" $root "item" $item "resourceKey" (printf "%s[%q]" $resourceKey $resourceName) "resourceName" $resourceName "defaultApiVersion" $defaultApiVersion "kind" $kind "namespaced" $namespaced)) -}}
+{{- end -}}
+{{- end -}}
+{{- join "\n---\n" $documents -}}
+{{- end -}}

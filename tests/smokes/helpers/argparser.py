@@ -14,6 +14,7 @@ SCENARIO_CHOICES = [
     "schema-invalid-missing-name",
     "schema-invalid-array-contract",
     "rendering-contract",
+    "null-override",
     "example-render",
     "example-kubeconform",
 ]
