@@ -6,10 +6,12 @@ The chart does not install Knative or KServe CRDs. It only renders resource inst
 
 ## Quick Start
 
-Render the example configuration:
+Add the Nixys chart repository:
 
 ```bash
-helm template nuc-knative . -f values.yaml.example
+helm repo add nixys https://registry.nixys.io/chartrepo/public
+# or
+helm repo add nixys https://registry.nixys.ru/chartrepo/public
 ```
 
 Install the chart:
