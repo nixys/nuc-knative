@@ -19,6 +19,10 @@ include:
     file:
       - "/sign-subchart.gitlab-ci.yml"
 
+variables:
+  KUBECONFORM_CRD_SCHEMA_LOCATION: "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
+  KUBECONFORM_SKIP_KINDS: "Certificate,ClusterDomainClaim,Configuration,DomainMapping,Image,Ingress,Metric,PodAutoscaler,Revision,Route,ServerlessService,Service"
+
 stages:
   - lint
   - tests

@@ -7,7 +7,8 @@ from typing import Callable
 from tests.smokes.steps import chart, helm, kubeconform, render, system
 
 SCENARIO_ALIASES = {
-    "schema-invalid-missing-name": "schema-invalid-array-contract",
+    "schema-invalid-missing-name": "schema-invalid-list-contract",
+    "schema-invalid-array-contract": "schema-invalid-list-contract",
 }
 
 
@@ -55,7 +56,7 @@ def check_default_empty(context: SmokeContext) -> None:
     render.assert_doc_count(documents, 0)
 
 
-def check_schema_invalid_array_contract(context: SmokeContext) -> None:
+def check_schema_invalid_list_contract(context: SmokeContext) -> None:
     result = helm.lint(
         context.chart_dir,
         values_file=context.invalid_array_contract_values,
@@ -256,7 +257,7 @@ def check_example_kubeconform(context: SmokeContext) -> None:
 
 SCENARIOS: list[tuple[str, Callable[[SmokeContext], None]]] = [
     ("default-empty", check_default_empty),
-    ("schema-invalid-array-contract", check_schema_invalid_array_contract),
+    ("schema-invalid-list-contract", check_schema_invalid_list_contract),
     ("rendering-contract", check_rendering_contract),
     ("null-override", check_null_override),
     ("example-render", check_example_render),
