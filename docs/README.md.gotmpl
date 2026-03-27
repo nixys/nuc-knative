@@ -1,5 +1,7 @@
 # NUC Knative
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/nuc-knative)](https://artifacthub.io/packages/search?repo=nuc-knative)
+
 Helm chart for rendering Knative Serving and Knative internal resources often used around KServe installations.
 
 The chart does not install Knative or KServe CRDs. It only renders resource instances for CRDs that already exist in the target cluster.
