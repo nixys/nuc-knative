@@ -1,9 +1,9 @@
 ---
 apiVersion: v2
 name: nuc-knative
-description: Helm chart for rendering Knative and KServe-adjacent CRD resources
+description: Helm chart for rendering Knative-adjacent CRD resources
 type: application
-version: 1.0.0-rc7
+version: 1.0.0
 appVersion: "v1"
 icon: https://registry.nixys.ru/logo.png
 home: https://github.com/nixys/nuc-knative
@@ -22,7 +22,7 @@ maintainers:
     email: v.vorobyov@nixys.ru
 annotations:
   artifacthub.io/category: integration-delivery
-  artifacthub.io/prerelease: "true"
+  artifacthub.io/prerelease: "false"
   artifacthub.io/license: Apache License 2.0
   artifacthub.io/links:  |
     - name: Home

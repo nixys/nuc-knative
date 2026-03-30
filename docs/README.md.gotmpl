@@ -11,18 +11,15 @@ The chart does not install Knative or KServe CRDs. It only renders resource inst
 Add the Nixys chart repository:
 
 ```bash
-helm repo add nixys https://registry.nixys.io/chartrepo/public
-# or
-helm repo add nixys https://registry.nixys.ru/chartrepo/public
+helm repo add nixys https://registry.nixys.io/nuc
 ```
 
 Install the chart:
 
 ```bash
-helm install nuc-knative . \
-  --namespace kserve-user \
-  --create-namespace \
-  -f values.yaml.example
+helm install nuc-kserve nixys/nuc-kserve \
+  --namespace kserve \
+  --create-namespace
 ```
 
 ## Supported Resources
